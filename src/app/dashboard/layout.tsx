@@ -22,7 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <aside className="hidden w-[200px] flex-col md:flex">
           <SidebarNav items={dashboardConfig.sidebarNav} />
         </aside>
-        <main className="flex w-full flex-1 flex-col overflow-hidden">
+        <main className="flex w-full flex-1 flex-col gap-3 overflow-hidden">
           {children}
         </main>
       </div>
