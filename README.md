@@ -1,4 +1,15 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## SNIPPETS
+Snippets is a platform made for sharing code snippets across multiple lanuages for small but extremely useful and concise functionalities.
+
+## TECH STACK
+- Frontend: TypeScript, NextJS, TailwindCSS
+- UI Library: ShadcnUI
+- Database: Supabase
+- Authentication and Authorization: Supabase Auth (@supabase/ssr)
+- More things will be revealed soon
+
+## NOTE
+This is an open source project. If you want to contribute to it, let me know and let's start working together to make this platform better for everyone.
 
 ## Getting Started
 
