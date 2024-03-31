@@ -1,9 +1,4 @@
 "use client";
-
-// import Link from "next/link";
-// import { User } from "next-auth"
-// import { signOut } from "next-auth/react"
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,7 +19,7 @@ interface UserAccountNavProps {
   };
 }
 
-export default function UserAccountNav({ user }: UserAccountNavProps) {
+export default function UserProfile({ user }: UserAccountNavProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { DashboardNavSidebarItem } from "@/types";
 import { Icons } from "./icons";
 
-export default function DashboardNav({
+export default function SidebarNav({
   items,
 }: {
   items: DashboardNavSidebarItem[];
