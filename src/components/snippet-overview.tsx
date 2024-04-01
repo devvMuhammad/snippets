@@ -18,6 +18,8 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { SnippetOperations } from "./snippet-operations";
+import { Icons } from "./icons";
 
 type SnippetOverviewProps = {
   title: string;
@@ -40,39 +42,12 @@ export default function SnippetOverview({
 }: Partial<SnippetOverviewProps>) {
   return (
     <Card>
-      {/* <CardHeader className="flex items-start gap-4">
-        <div className="flex items-start gap-2">
-          <CardTitle className="text-base">Next.js Image</CardTitle>
-          <CardDescription className="text-sm">
-            Optimize images in your Next.js project
-          </CardDescription>
-        </div>
-        <div>
-          <div>
-            <Button className="rounded-full border" size="icon" variant="ghost">
-              <MoreHorizontalIcon className="w-4 h-4" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </div>
-          <div>
-            <div>
-              <FileEditIcon className="w-4 h-4 mr-2" />
-              Edit
-            </div>
-            <div>
-              <CopyIcon className="w-4 h-4 mr-2" />
-              Copy
-            </div>
-            <div>
-              <TrashIcon className="w-4 h-4 mr-2" />
-              Delete
-            </div>
-          </div>
-        </div>
-      </CardHeader> */}
-      <CardContent className="w-full grid grid-cols-[1fr_100px] p-4 md:p-6">
+      {/* CARD CONTENT */}
+      <CardContent className="w-full grid grid-cols-[1fr_auto] gap-6 justify-between items-center p-4 md:p-6">
         <div className="grid gap-1">
-          <CardTitle className="text-lg">Integrating with Shadcn</CardTitle>
+          <CardTitle className="text-lg">
+            Integrating with Shadcn Lorem ipsum
+          </CardTitle>
           <CardDescription className="overflow-hidden text-nowrap overflow-ellipsis">
             Lorem ipsum dol Lorem ipsum dolor sit amet, consectetur adipisicing
             elit. Animi sit, aliquid repellat voluptatum quae repudiandae illum
@@ -81,20 +56,28 @@ export default function SnippetOverview({
             deleniti reprehenderit perspiciatis quam.
           </CardDescription>
         </div>
-        <Button size="sm">View</Button>
+        {/* <Button size="sm">View</Button> */}
+        <SnippetOperations />
       </CardContent>
+      {/* CARD FOOTER */}
       <CardFooter className="border-t p-4">
-        <div className="flex items-center gap-4">
+        <div className="w-full flex justify-evenly items-center gap-4">
           <div className="flex items-center gap-2">
-            <CalendarIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+            <Icons.calender className="w-4 h-4 text-gray-500 dark:text-gray-400 hover:text-blue-500 cursor-pointer" />
             <span className="text-xs text-gray-500 dark:text-gray-400">
-              Created 2 days ago
+              2 days
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <EyeIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+            <Icons.eye className="w-4 h-4 text-gray-500 dark:text-gray-400 hover:text-blue-500 cursor-pointer" />
             <span className="text-xs text-gray-500 dark:text-gray-400">
-              Viewed 100 times
+              100 <span className="hidden md:inline"> Views</span>
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Icons.likes className="w-4 h-4 text-gray-500 dark:text-gray-400 hover:text-red-600 cursor-pointer" />
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              48 <span className="hidden md:inline">Likes</span>
             </span>
           </div>
         </div>
