@@ -30,7 +30,7 @@ type TLoginSchema = z.infer<typeof LoginSchema>;
 export default function SigninForm() {
   const [loading, setLoading] = useState(false);
   const {
-    // handleSubmit,
+    handleSubmit,
     register,
     formState: { errors },
     // setError,
@@ -39,7 +39,10 @@ export default function SigninForm() {
   });
 
   return (
-    <form className="mt-6">
+    <form
+      className="mt-6"
+      onSubmit={handleSubmit((formData) => console.log(formData))}
+    >
       <label className="text-sm font-medium" htmlFor="email">
         Email
       </label>
