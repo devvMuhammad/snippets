@@ -8,6 +8,7 @@ import { useState } from "react";
 // import { customSignIn } from "../../../db/queries/signIn";
 // import { signIn } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
+import { signIn } from "@/lib/actions/login";
 
 const LoginSchema = z.object({
   email: z.string().min(1, "Please enter a valid email address").email(),
@@ -28,20 +29,30 @@ const LoginSchema = z.object({
 type TLoginSchema = z.infer<typeof LoginSchema>;
 
 export default function SigninForm() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
     register,
     formState: { errors },
+    setError,
     // setError,
   } = useForm<TLoginSchema>({
     resolver: zodResolver(LoginSchema),
   });
-
   async function submitHandler(data: TLoginSchema) {
     setLoading(true);
     try {
+      const response = await signIn(data);
+      if (!response.success) throw new Error(response.message);
+      router.push("/dashboard");
     } catch (err) {
+      const error = err as Error;
+      // toast
+      setError("loginError", {
+        type: "validate",
+        message: error.message,
+      });
     } finally {
       setLoading(false);
     }
