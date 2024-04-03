@@ -55,9 +55,8 @@ export function SnippetOperations() {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-[0.35rem] border transition-colors hover:bg-muted">
+        <DropdownMenuTrigger className="flex p-2 items-center justify-center rounded-[0.35rem] border transition-colors hover:bg-muted">
           <Icons.ellipsis className="h-4 w-4" />
-          <span className="sr-only">Open</span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem>
