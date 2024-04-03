@@ -38,11 +38,31 @@ export default function SigninForm() {
     resolver: zodResolver(LoginSchema),
   });
 
+  async function submitHandler(data: TLoginSchema) {
+    setLoading(true);
+    try {
+    } catch (err) {
+    } finally {
+      setLoading(false);
+    }
+    // const response = await customSignIn(data);
+    // if (response.error) {
+    //   setError("loginError", {
+    //     message: response.error,
+    //   });
+    //   setLoading(false);
+    //   return;
+    // }
+    // await signIn("credentials", {
+    //   redirect: false,
+    //   email: data.email,
+    //   password: data.password,
+    // });
+    // await redirect("/dashboard");
+  }
+
   return (
-    <form
-      className="mt-6"
-      onSubmit={handleSubmit((formData) => console.log(formData))}
-    >
+    <form className="mt-6" onSubmit={handleSubmit(submitHandler)}>
       <label className="text-sm font-medium" htmlFor="email">
         Email
       </label>
