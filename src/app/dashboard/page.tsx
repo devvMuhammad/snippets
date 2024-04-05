@@ -1,12 +1,18 @@
 import { Icons } from "@/components/icons";
 import SnippetOverview from "@/components/snippet-overview";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/server";
+import { checkServerSession } from "@/lib/supabase/session";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Dashboard",
 };
 
-export default function Page() {
+export default async function Page() {
+  const data = await checkServerSession();
+  console.log("data inside the server component", data);
+  if (data.error) redirect("/login");
   return (
     <>
       <div className="flex items-center justify-between px-2">
