@@ -10,9 +10,9 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const data = await checkServerSession();
-  console.log("data inside the server component", data);
-  if (data.error) redirect("/login");
+  // const data = await checkServerSession();
+  // console.log("data inside the server component", data);
+  // if (data.error) redirect("/login");
   return (
     <>
       <div className="flex items-center justify-between px-2">
