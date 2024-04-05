@@ -7,10 +7,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components/user-avatar";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 
-// interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
-//   user: Pick<User, "name" | "image" | "email">
-// }
 interface UserAccountNavProps {
   user: {
     name: string;
@@ -19,7 +19,11 @@ interface UserAccountNavProps {
   };
 }
 
+const supabase = createClient();
+
 export default function UserProfile({ user }: UserAccountNavProps) {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -40,14 +44,16 @@ export default function UserProfile({ user }: UserAccountNavProps) {
 
         <DropdownMenuItem
           className="cursor-pointer rounded-[0.25rem] p-2"
-          // onSelect={(event) => {
-          //   event.preventDefault();
-          //   signOut({
-          //     callbackUrl: `${window.location.origin}/login`,
-          //   });
-          // }}
+          onSelect={(e) => {
+            e.preventDefault();
+            startTransition(async () => {
+              const resp = await supabase.auth.signOut();
+              if (!resp.error) router.replace("/login");
+              console.log("response of logout", resp);
+            });
+          }}
         >
-          Sign out
+          {isPending ? "Logging out..." : "Logout"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
