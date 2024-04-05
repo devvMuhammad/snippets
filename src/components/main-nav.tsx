@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { DashboardNavMainItem } from "@/types";
+import { DashboardNavMainItem } from "@/types/index";
 
 export default function MainNav({
   items,
