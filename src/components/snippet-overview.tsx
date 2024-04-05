@@ -36,7 +36,7 @@ export default function SnippetOverview({
   return (
     <Card>
       {/* CARD CONTENT */}
-      <CardContent className="w-full grid grid-cols-[1fr_auto] gap-6 justify-between items-center p-4 md:p-6">
+      <CardContent className="w-full grid grid-cols-[1fr_auto] gap-6 justify-between items-center p-4">
         <div className="grid gap-1">
           <CardTitle className="text-lg">{title}</CardTitle>
           <CardDescription className="overflow-hidden text-nowrap overflow-ellipsis">
@@ -60,7 +60,7 @@ export default function SnippetOverview({
                 </TooltipContent>
                 <span className="text-xs text-gray-500 dark:text-gray-400">
                   {/* 2 days ago */}
-                  {new Date().toLocaleDateString()}
+                  {createdAt.toLocaleString()}
                 </span>
               </div>
             </Tooltip>
