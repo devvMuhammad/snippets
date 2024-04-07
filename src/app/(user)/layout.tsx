@@ -17,9 +17,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
           />
         </div>
       </header>
-      <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
-        {children}
-      </div>
+      <div className="container">{children}</div>
     </div>
   );
 }
