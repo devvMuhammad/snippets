@@ -17,9 +17,10 @@ import {
 } from "@/components/ui/popover";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, FileIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { languages } from "@/config/languages";
+import { Icons } from "./icons";
 
 export default function EditorForm() {
   const [languageOpen, setLanguageOpen] = React.useState(false);
@@ -148,6 +149,25 @@ export default function EditorForm() {
           </Popover>
         </div>
       )}{" "}
+      <div className="space-y-3">
+        <div className="flex justify-between items-center">
+          <Label className="text-lg">Snippets</Label>
+          <Button size="sm">
+            <Icons.add className="mr-2 h-4 w-4" />
+            Create
+          </Button>
+        </div>
+        <div className="bg-gray-900 rounded-lg py-6 w-full flex flex-col gap-1 items-center justify-center">
+          <FileIcon className="h-10 w-10 text-gray-600" />
+          <p className="font-bold">No snippets found </p>
+          <p className="text-xs md:text-sm text-balance text-center">
+            Upload a file or use the '+' button to make one yourself
+          </p>
+          <Button size="sm" className="mt-2">
+            Upload
+          </Button>
+        </div>
+      </div>
     </>
   );
 }
