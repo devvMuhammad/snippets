@@ -4,6 +4,7 @@ import {
   EllipsisVertical,
   EyeIcon,
   HeartIcon,
+  Info,
   Loader2,
   Plus,
   Rocket,
@@ -22,4 +23,5 @@ export const Icons = {
   calender: Calendar,
   eye: EyeIcon,
   likes: HeartIcon,
+  info: Info,
 };
