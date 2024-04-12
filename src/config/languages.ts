@@ -58,4 +58,8 @@ export const languages = [
     value: "sql",
     label: "SQL",
   },
+  {
+    value: "dockerfile",
+    label: "Dockerfile",
+  },
 ];
