@@ -21,17 +21,36 @@ import { Check, ChevronsUpDown, FileIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { languages } from "@/config/languages";
 import { Icons } from "./icons";
+import EmptySnippet from "./empty-snippet";
+import CodeEditor from "./code-editor";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function EditorForm() {
+  // for language
   const [languageOpen, setLanguageOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
-
+  // for framework
   const [frameworkOpen, setFrameworkOpen] = React.useState(false);
   const [frameworkValue, setFrameworkValue] = React.useState("");
-
+  // current framework array based on the language selected
   const currentFrameworkArray = languages.find(
     (language) => language.value === value
   )?.frameworks;
+  // for snippets
+  const [snippetsEmpty, setSnippetsEmpty] = React.useState(true);
+  // for theme
+  const [theme, setTheme] = React.useState("vs-dark");
+  // for fontSize
+  const [fontSize, setFontSize] = React.useState(17);
   return (
     <>
       {" "}
@@ -152,21 +171,84 @@ export default function EditorForm() {
       <div className="space-y-3">
         <div className="flex justify-between items-center">
           <Label className="text-lg">Snippets</Label>
-          <Button size="sm">
+          <Button
+            size="sm"
+            onClick={() => {
+              if (!value || !frameworkValue) return;
+              setSnippetsEmpty(false);
+            }}
+          >
             <Icons.add className="mr-2 h-4 w-4" />
             Create
           </Button>
         </div>
-        <div className="bg-gray-900 rounded-lg py-6 w-full flex flex-col gap-1 items-center justify-center">
-          <FileIcon className="h-10 w-10 text-gray-600" />
-          <p className="font-bold">No snippets found </p>
-          <p className="text-xs md:text-sm text-balance text-center">
-            Upload a file or use the '+' button to make one yourself
-          </p>
-          <Button size="sm" className="mt-2">
-            Upload
-          </Button>
-        </div>
+        {snippetsEmpty ? (
+          <EmptySnippet />
+        ) : (
+          <>
+            <div className="flex justify-between items-center">
+              {" "}
+              <p className="font-bold text-sm">Options</p>
+              <div className="flex items-center gap-2">
+                <Label className="text-sm">Theme</Label>
+                <Select value={theme} onValueChange={setTheme}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select a fruit" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Themes</SelectLabel>
+                      <SelectItem className="text-xs" value="vs-dark">
+                        Visual Studio Dark
+                      </SelectItem>
+                      <SelectItem className="text-xs" value="github-dark">
+                        Github Dark
+                      </SelectItem>
+                      <SelectItem className="text-xs" value="light">
+                        Light Mode
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-2">
+                <Label className="text-xs">Font Size</Label>
+                <Select
+                  value={fontSize.toString()}
+                  onValueChange={(val) => setFontSize(+val)}
+                >
+                  <SelectTrigger className="w-[80px]">
+                    <SelectValue placeholder="Select a fruit" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {Array.from({ length: 22 - 8 }, (_, i) => (
+                        <SelectItem
+                          key={i}
+                          className="text-sm"
+                          value={(i + 10).toString()}
+                          onSelect={(e) => e.preventDefault()}
+                        >
+                          {i + 8 + 1}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button size="sm" className="h-8">
+                <Icons.info className="mr-2" />
+                Add Info
+              </Button>
+            </div>
+            <CodeEditor
+              key={value}
+              language={value}
+              theme={theme}
+              fontSize={fontSize}
+            />
+          </>
+        )}
       </div>
     </>
   );
