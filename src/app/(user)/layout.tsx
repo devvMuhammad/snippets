@@ -17,7 +17,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
           />
         </div>
       </header>
-      <div className="container">{children}</div>
+      <div className="container pb-8">{children}</div>
     </div>
   );
 }
