@@ -192,7 +192,7 @@ export default function EditorForm() {
               <div className="flex items-center gap-2">
                 <Label className="text-sm">Theme</Label>
                 <Select value={theme} onValueChange={setTheme}>
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-[180px] text-sm">
                     <SelectValue placeholder="Select a fruit" />
                   </SelectTrigger>
                   <SelectContent>
@@ -217,7 +217,7 @@ export default function EditorForm() {
                   value={fontSize.toString()}
                   onValueChange={(val) => setFontSize(+val)}
                 >
-                  <SelectTrigger className="w-[80px]">
+                  <SelectTrigger className="w-[80px] text-sm">
                     <SelectValue placeholder="Select a fruit" />
                   </SelectTrigger>
                   <SelectContent>

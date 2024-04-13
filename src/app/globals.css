@@ -76,3 +76,20 @@
     @apply bg-background text-foreground;
   }
 }
+
+.glyph {
+  background-color: red;
+  height: 100px;
+  width: 100px;
+}
+
+.myGlyphMarginClass {
+  background: red;
+  cursor: pointer;
+  border-radius: 50%;
+  margin-left: 10px;
+}
+.myContentClass {
+  /* Make sure to use transparent colors for the selection to work */
+  background: rgba(173, 216, 230, 0.5);
+}
