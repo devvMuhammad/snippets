@@ -174,7 +174,8 @@ export default function EditorForm() {
           <Button
             size="sm"
             onClick={() => {
-              if (!value || !frameworkValue) return;
+              //! set this later
+              // if (!value || !frameworkValue) return;
               setSnippetsEmpty(false);
             }}
           >
