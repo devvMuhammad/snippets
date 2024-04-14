@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Editor } from "@monaco-editor/react";
+import { Editor, loader } from "@monaco-editor/react";
 import { githubDarkTheme } from "@/config/themes/github-dark";
 import {
   Tooltip,
@@ -8,6 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { Button } from "./ui/button";
 
 export default function CodeEditor({
   language,
@@ -20,12 +21,24 @@ export default function CodeEditor({
 }) {
   // const editorRef = useRef<any>(null);
   const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [tooltips, setTooltips] = useState<number[]>([1]);
   useEffect(() => {
-    console.log(document.querySelector(".editor"));
+    // console.log(document.querySelector(".editor"));
     const eventHandler = (e: Event) => {
+      // if (e?.target === document.querySelector(".myGlyphMarginClass number-0")) { {
+      console.log(e.target);
       if (e?.target === document.querySelector(".myGlyphMarginClass")) {
-        // console.log("clicked");
-        setTooltipOpen((prev) => !prev);
+        {
+          console.log("clicked");
+          // then further check for the first one
+          if (
+            document
+              .querySelector(".myGlyphMarginClass")
+              ?.classList.contains("number-0")
+          ) {
+            setTooltipOpen((prev) => !prev);
+          }
+        }
       }
     };
     document.querySelector(".editor")?.addEventListener("click", eventHandler);
@@ -35,10 +48,13 @@ export default function CodeEditor({
         .querySelector(".editor")
         ?.removeEventListener("click", eventHandler);
     };
-  }, []);
+  }, [tooltips]);
 
   return (
     <div className="relative">
+      <Button onClick={() => setTooltips((prev) => [...prev, 1])}>
+        Add (test)
+      </Button>
       <TooltipProvider delayDuration={0}>
         <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
           <TooltipTrigger style={{ position: "absolute", top: `${5 * 3}%` }}>
@@ -54,6 +70,8 @@ export default function CodeEditor({
         </Tooltip>
       </TooltipProvider>
       <Editor
+        // key={tooltipOpen}
+        key={tooltips.length}
         className="editor"
         height="30vh"
         theme={theme}
@@ -80,17 +98,30 @@ export default function CodeEditor({
         ].join("\n")}
         onMount={(editor, monaco) => {
           // editorRef.current = editor;
+          console.log("does this get triggered upon a state change???");
           monaco.editor.defineTheme("github-dark", githubDarkTheme as any);
-          editor.createDecorationsCollection([
-            {
-              range: new monaco.Range(3, 1, 3, 1),
-              options: {
-                isWholeLine: true,
-                // className: "myContentClass",
-                glyphMarginClassName: "myGlyphMarginClass",
+          tooltips.forEach((_, i) => {
+            editor.createDecorationsCollection([
+              {
+                range: new monaco.Range(3 + i, 1, 3 + i, 1),
+                options: {
+                  isWholeLine: true,
+                  // className: "myContentClass",
+                  glyphMarginClassName: "myGlyphMarginClass number-" + i,
+                },
               },
-            },
-          ]);
+            ]);
+          });
+          // editor.createDecorationsCollection([
+          //   {
+          //     range: new monaco.Range(3, 1, 3, 1),
+          //     options: {
+          //       isWholeLine: true,
+          //       // className: "myContentClass",
+          //       glyphMarginClassName: "myGlyphMarginClass",
+          //     },
+          //   },
+          // ]);
         }}
       />
     </div>
