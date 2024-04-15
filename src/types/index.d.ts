@@ -18,8 +18,9 @@ type ExpType = {
 };
 
 export type ActualCodeSnippet = {
-  language: string;
-  framework: string | null;
+  // will check later if these two properties are required or not
+  language?: string;
+  framework?: string | null;
   code: string;
   explanations: ExpType[];
 };
