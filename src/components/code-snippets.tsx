@@ -15,7 +15,7 @@ import { Button } from "./ui/button";
 import { Icons } from "./icons";
 import React from "react";
 import EmptySnippet from "./empty-snippet";
-import { ActualCodeSnippet } from "@/types";
+import { ActualCodeSnippet, ExpType } from "@/types";
 export default function CodeSnippets({
   language,
   framework,
@@ -24,6 +24,7 @@ export default function CodeSnippets({
   framework: string;
 }) {
   //! additional tip, save progress after every 2 seconds, check this later
+  //! when kaafi kaam hochuka hai, then issue warning before changing the language or framework
   // array of snippets
   const [codeSnippets, setCodeSnippets] = React.useState<ActualCodeSnippet[]>(
     []
@@ -69,7 +70,7 @@ export default function CodeSnippets({
             <div className="space-y-8">
               {codeSnippets.map((snippet, index) => (
                 <CodeEditor
-                  key={index}
+                  key={language}
                   language={language}
                   theme={theme}
                   fontSize={fontSize}
@@ -80,8 +81,22 @@ export default function CodeSnippets({
                       prev.filter((_, i) => i !== index)
                     );
                   }}
-                  // code={code} later
-                  // explanations={explanations} later
+                  addExplanation={(explanation: ExpType) => {
+                    // no need to add position of the snippet here, as we can already access the index here, directly
+                    // replace this with db logic later
+                    setCodeSnippets((prev) =>
+                      prev.map((item, i) =>
+                        i === index
+                          ? {
+                              ...item,
+                              explanations: [...item.explanations, explanation],
+                            }
+                          : item
+                      )
+                    );
+                  }}
+                  code={snippet.code} //later
+                  explanations={snippet.explanations} //later
                 />
               ))}
             </div>
