@@ -11,3 +11,15 @@ export type DashboardNavSidebarItem = {
   href: string;
   icon: keyof typeof Icons;
 };
+
+type ExpType = {
+  lineNumber: number;
+  text: string;
+};
+
+export type ActualCodeSnippet = {
+  language: string;
+  framework: string | null;
+  code: string;
+  explanations: ExpType[];
+};
