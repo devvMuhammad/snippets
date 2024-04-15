@@ -20,23 +20,41 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "./ui/button";
 import { Icons } from "./icons";
+import { ActualCodeSnippet, ExpType } from "@/types";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
 
 export default function CodeEditor({
+  code,
+  explanations,
   language,
   theme,
   fontSize,
   number,
+  addExplanation,
   removeSnippet,
 }: {
+  code: string;
+  explanations: ExpType[];
   language: string;
   theme: string;
   fontSize: number;
-  removeSnippet: () => void;
   number: number;
+  addExplanation: (exp: ExpType) => void;
+  removeSnippet: () => void;
 }) {
   // const editorRef = useRef<any>(null);
   const [tooltipOpen, setTooltipOpen] = useState(false);
-  const [tooltips, setTooltips] = useState<number[]>([]);
   useEffect(() => {
     // console.log(document.querySelector(".editor"));
     const eventHandler = (e: Event) => {
@@ -63,17 +81,55 @@ export default function CodeEditor({
         .querySelector(".editor")
         ?.removeEventListener("click", eventHandler);
     };
-  }, [tooltips]);
+  }, [explanations]);
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
         <span>Snippet: {number}</span>
         <div className="self-end flex gap-2">
-          <Button size="sm" className="h-8">
-            <Icons.info className="mr-2" />
-            Add Info
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size="sm" className="h-8">
+                <Icons.info className="mr-2" />
+                Add Info
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="w-[80%] sm:max-w-[700px]">
+              <DialogHeader>
+                <DialogTitle>Add an Explanation</DialogTitle>
+                <DialogDescription>
+                  Enter the explanation for a particular line of code.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="flex items-center gap-4">
+                  <Label htmlFor="name" className="text-right">
+                    Line Number
+                  </Label>
+                  <Input
+                    type="number"
+                    id="name"
+                    defaultValue="Pedro Duarte"
+                    className="w-[100px]"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <Label htmlFor="explanation" className="inline">
+                    Explanation
+                  </Label>
+                  <Textarea
+                    id="explanation"
+                    placeholder="explanation for the line goes here ..."
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button type="submit">Save changes</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
           <DeleteSingleSnippet removeSnippet={removeSnippet} />
         </div>
       </div>
@@ -94,7 +150,7 @@ export default function CodeEditor({
         </TooltipProvider>
         <Editor
           // key={tooltipOpen}
-          key={tooltips.length}
+          key={explanations.length}
           className="editor"
           height="30vh"
           theme={theme}
@@ -123,7 +179,7 @@ export default function CodeEditor({
             // editorRef.current = editor;
             console.log("does this get triggered upon a state change???");
             monaco.editor.defineTheme("github-dark", githubDarkTheme as any);
-            tooltips.forEach((_, i) => {
+            explanations.forEach((_, i) => {
               editor.createDecorationsCollection([
                 {
                   range: new monaco.Range(3 + i, 1, 3 + i, 1),
