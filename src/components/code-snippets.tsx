@@ -70,7 +70,7 @@ export default function CodeSnippets({
             <div className="space-y-8">
               {codeSnippets.map((snippet, index) => (
                 <CodeEditor
-                  key={language}
+                  key={index}
                   language={language}
                   theme={theme}
                   fontSize={fontSize}

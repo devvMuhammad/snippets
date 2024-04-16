@@ -152,7 +152,7 @@ export default function EditorForm() {
           </Popover>
         </div>
       )}{" "}
-      <CodeSnippets language={value} framework={frameworkValue} />
+      <CodeSnippets key={value} language={value} framework={frameworkValue} />
     </>
   );
 }

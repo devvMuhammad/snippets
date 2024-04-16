@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Editor, loader } from "@monaco-editor/react";
+import { useEffect, useRef, useState } from "react";
+import { Editor as MonacoEditor, loader } from "@monaco-editor/react";
 import { githubDarkTheme } from "@/config/themes/github-dark";
 import {
   Tooltip,
@@ -33,6 +33,7 @@ import {
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import AddExplanationForm from "./add-explanation";
 
 export default function CodeEditor({
   code,
@@ -53,13 +54,15 @@ export default function CodeEditor({
   addExplanation: (exp: ExpType) => void;
   removeSnippet: () => void;
 }) {
-  // const editorRef = useRef<any>(null);
+  const editorRef = useRef<any>(null);
+  // const
   const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [lineNumber, setLineNumber] = useState<number | null>();
   useEffect(() => {
     // console.log(document.querySelector(".editor"));
     const eventHandler = (e: Event) => {
       // if (e?.target === document.querySelector(".myGlyphMarginClass number-0")) { {
-      console.log(e.target);
+      // console.log(e.target);
       if (e?.target === document.querySelector(".myGlyphMarginClass")) {
         {
           console.log("clicked");
@@ -88,67 +91,20 @@ export default function CodeEditor({
       <div className="flex justify-between">
         <span>Snippet: {number}</span>
         <div className="self-end flex gap-2">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button size="sm" className="h-8">
-                <Icons.info className="mr-2" />
-                Add Info
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="w-[80%] sm:max-w-[700px]">
-              <DialogHeader>
-                <DialogTitle>Add an Explanation</DialogTitle>
-                <DialogDescription>
-                  Enter the explanation for a particular line of code.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="flex items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    Line Number
-                  </Label>
-                  <Input
-                    type="number"
-                    id="name"
-                    defaultValue="Pedro Duarte"
-                    className="w-[100px]"
-                  />
-                </div>
-                <div className="space-y-3">
-                  <Label htmlFor="explanation" className="inline">
-                    Explanation
-                  </Label>
-                  <Textarea
-                    id="explanation"
-                    placeholder="explanation for the line goes here ..."
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button type="submit">Save changes</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-
+          <AddExplanationForm
+            editorRef={editorRef}
+            lineNumber={lineNumber ?? 1}
+            setLineNumber={setLineNumber}
+          />
           <DeleteSingleSnippet removeSnippet={removeSnippet} />
         </div>
       </div>
       <div className="relative">
-        <TooltipProvider delayDuration={0}>
-          <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
-            <TooltipTrigger style={{ position: "absolute", top: `${5 * 3}%` }}>
-              {}
-            </TooltipTrigger>
-            <TooltipContent className="border border-white">
-              {/* Date */}
-              <span className="text-white">
-                {/* 2 days ago */}
-                roksha mara
-              </span>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        <Editor
+        <ExplanationTooltip
+          tooltipOpen={tooltipOpen}
+          setTooltipOpen={setTooltipOpen}
+        />
+        <MonacoEditor
           // key={tooltipOpen}
           key={explanations.length}
           className="editor"
@@ -175,9 +131,13 @@ export default function CodeEditor({
             "	return this.age;",
             "};",
           ].join("\n")}
+          // onChange={(val,e) => {
+          // }}
           onMount={(editor, monaco) => {
-            // editorRef.current = editor;
-            console.log("does this get triggered upon a state change???");
+            // set the ref to the editor object
+            editorRef.current = editor;
+            setLineNumber(editor.getModel()?.getLineCount());
+            // console.log("does this get triggered upon a state change???");
             monaco.editor.defineTheme("github-dark", githubDarkTheme as any);
             explanations.forEach((_, i) => {
               editor.createDecorationsCollection([
@@ -195,6 +155,31 @@ export default function CodeEditor({
         />
       </div>
     </div>
+  );
+}
+
+function ExplanationTooltip({
+  tooltipOpen,
+  setTooltipOpen,
+}: {
+  tooltipOpen: boolean;
+  setTooltipOpen: (val: boolean) => void;
+}) {
+  return (
+    <TooltipProvider delayDuration={0}>
+      <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
+        <TooltipTrigger style={{ position: "absolute", top: `${5 * 3}%` }}>
+          {}
+        </TooltipTrigger>
+        <TooltipContent className="border border-white">
+          {/* Date */}
+          <span className="text-white">
+            {/* 2 days ago */}
+            roksha mara
+          </span>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 
