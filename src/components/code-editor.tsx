@@ -21,67 +21,74 @@ import {
 import { Button } from "./ui/button";
 import { Icons } from "./icons";
 import { ActualCodeSnippet, ExpType } from "@/types";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
 import AddExplanationForm from "./add-explanation";
 
 export default function CodeEditor({
   code,
-  explanations,
+  initialExplanations,
   language,
   theme,
   fontSize,
   number,
-  addExplanation,
+  // addExplanation,
   removeSnippet,
 }: {
   code: string;
-  explanations: ExpType[];
+  initialExplanations: ExpType[];
   language: string;
   theme: string;
   fontSize: number;
   number: number;
-  addExplanation: (exp: ExpType) => void;
+  // addExplanation: (exp: ExpType) => void;
   removeSnippet: () => void;
 }) {
+  const [explanations, setExplanations] =
+    useState<ExpType[]>(initialExplanations);
+  const addExplanation = (exp: ExpType) => {
+    setExplanations((prev) => [...prev, exp]);
+  };
+  const removeExplanation = (index: number) => {
+    setExplanations((prev) => prev.filter((_, i) => i !== index));
+  };
   const editorRef = useRef<any>(null);
+  console.log(explanations);
   // const
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const [lineNumber, setLineNumber] = useState<number | null>();
+  // this is the explanation among all explanations that is currently being active
+  const [activeExplanationNumber, setActiveExplanationNumber] = useState<
+    number | null
+  >(null);
+  // console.log(activeExplanationNumber);
+  // onCLick of left click does not work, so we have to attach an event listener to the whole editor ourself
   useEffect(() => {
-    // console.log(document.querySelector(".editor"));
+    console.log("use effect call");
     const eventHandler = (e: Event) => {
-      // if (e?.target === document.querySelector(".myGlyphMarginClass number-0")) { {
-      // console.log(e.target);
-      if (e?.target === document.querySelector(".myGlyphMarginClass")) {
-        {
-          console.log("clicked");
-          // then further check for the first one
-          if (
-            document
-              .querySelector(".myGlyphMarginClass")
-              ?.classList.contains("number-0")
-          ) {
-            setTooltipOpen((prev) => !prev);
-          }
-        }
+      console.log("click inside editor", e.target);
+      // attach event to the whole editor and then check if the glyph margin is clicked
+      const target = e.target as HTMLElement;
+      const targetClassListArr = [...(target.classList as unknown as string[])];
+      if (
+        targetClassListArr.find((elm) => elm.match(/number-\d/))
+        // targetClassListArr.includes(`editor-${number}`)
+      ) {
+        // console.log("clicked on the glyph margin");
+        const selectedExplanationNumber = targetClassListArr
+          .find((elm) => elm.match(/number-\d/))
+          ?.split("-")[1] as string;
+        setActiveExplanationNumber(+selectedExplanationNumber);
+
+        setTooltipOpen(true);
       }
     };
-    document.querySelector(".editor")?.addEventListener("click", eventHandler);
+
+    document
+      .querySelector(`.editor-${number}`)
+      ?.addEventListener("click", eventHandler);
 
     return () => {
       document
-        .querySelector(".editor")
+        .querySelector(`.editor-${number}`)
         ?.removeEventListener("click", eventHandler);
     };
   }, [explanations]);
@@ -95,19 +102,26 @@ export default function CodeEditor({
             editorRef={editorRef}
             lineNumber={lineNumber ?? 1}
             setLineNumber={setLineNumber}
+            addExplanation={addExplanation}
           />
           <DeleteSingleSnippet removeSnippet={removeSnippet} />
         </div>
       </div>
       <div className="relative">
-        <ExplanationTooltip
-          tooltipOpen={tooltipOpen}
-          setTooltipOpen={setTooltipOpen}
-        />
+        {explanations.length > 0 &&
+          activeExplanationNumber?.toLocaleString() &&
+          tooltipOpen && (
+            <ExplanationTooltip
+              tooltipOpen={tooltipOpen}
+              setTooltipOpen={setTooltipOpen}
+              text={explanations[activeExplanationNumber].text}
+              // text={}
+            />
+          )}
         <MonacoEditor
           // key={tooltipOpen}
           key={explanations.length}
-          className="editor"
+          className={`editor-${number}`}
           height="30vh"
           theme={theme}
           defaultLanguage={language}
@@ -136,9 +150,10 @@ export default function CodeEditor({
           onMount={(editor, monaco) => {
             // set the ref to the editor object
             editorRef.current = editor;
-            setLineNumber(editor.getModel()?.getLineCount());
+            // setLineNumber(editor.getModel()?.getLineCount());
             // console.log("does this get triggered upon a state change???");
             monaco.editor.defineTheme("github-dark", githubDarkTheme as any);
+            // adds all the explanations
             explanations.forEach((_, i) => {
               editor.createDecorationsCollection([
                 {
@@ -146,7 +161,8 @@ export default function CodeEditor({
                   options: {
                     isWholeLine: true,
                     // className: "myContentClass",
-                    glyphMarginClassName: "myGlyphMarginClass number-" + i,
+                    // glyphMarginClassName: "myGlyphMarginClass number-" + i,
+                    glyphMarginClassName: `myGlyphMarginClass editor-${number} number-${i}`,
                   },
                 },
               ]);
@@ -161,21 +177,26 @@ export default function CodeEditor({
 function ExplanationTooltip({
   tooltipOpen,
   setTooltipOpen,
+  text,
 }: {
   tooltipOpen: boolean;
   setTooltipOpen: (val: boolean) => void;
+  text: string;
 }) {
   return (
     <TooltipProvider delayDuration={0}>
-      <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
+      <Tooltip open={tooltipOpen}>
         <TooltipTrigger style={{ position: "absolute", top: `${5 * 3}%` }}>
           {}
         </TooltipTrigger>
-        <TooltipContent className="border border-white">
-          {/* Date */}
+        <TooltipContent
+          className="border border-white"
+          onPointerDownOutside={() => setTooltipOpen(false)}
+          // {/* Date */}
+        >
           <span className="text-white">
             {/* 2 days ago */}
-            roksha mara
+            {text}
           </span>
         </TooltipContent>
       </Tooltip>

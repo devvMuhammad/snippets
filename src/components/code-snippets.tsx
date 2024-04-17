@@ -16,6 +16,8 @@ import { Icons } from "./icons";
 import React from "react";
 import EmptySnippet from "./empty-snippet";
 import { ActualCodeSnippet, ExpType } from "@/types";
+import exp from "constants";
+
 export default function CodeSnippets({
   language,
   framework,
@@ -76,27 +78,15 @@ export default function CodeSnippets({
                   fontSize={fontSize}
                   number={index + 1}
                   removeSnippet={() => {
-                    // replace this with db logic later
+                    // replace this with db logic later, no state will be involved here
                     setCodeSnippets((prev) =>
                       prev.filter((_, i) => i !== index)
                     );
                   }}
-                  addExplanation={(explanation: ExpType) => {
-                    // no need to add position of the snippet here, as we can already access the index here, directly
-                    // replace this with db logic later
-                    setCodeSnippets((prev) =>
-                      prev.map((item, i) =>
-                        i === index
-                          ? {
-                              ...item,
-                              explanations: [...item.explanations, explanation],
-                            }
-                          : item
-                      )
-                    );
-                  }}
                   code={snippet.code} //later
-                  explanations={snippet.explanations} //later
+                  // explanations={snippet.explanations} //later
+                  initialExplanations={[]} //later
+                  // codeSnippets={codeSnippets}
                 />
               ))}
             </div>
