@@ -28,9 +28,10 @@ export default function AddExplanationForm({
 }) {
   const [explanation, setExplanation] = useState("");
   const [inputLineNumber, setInputLineNumber] = useState<number>(1);
+  const [dialogOpen, setDialogOpen] = useState(false);
   return (
     // <div className="self-end flex gap-2">
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <Button
           size="sm"
@@ -80,12 +81,13 @@ export default function AddExplanationForm({
         <DialogFooter>
           <Button
             type="submit"
-            onClick={() =>
+            onClick={() => {
               addExplanation({
                 lineNumber: inputLineNumber,
                 text: explanation,
-              })
-            }
+              });
+              setDialogOpen(false);
+            }}
           >
             Save changes
           </Button>

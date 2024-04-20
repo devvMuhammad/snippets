@@ -42,10 +42,27 @@ export default function CodeEditor({
   // addExplanation: (exp: ExpType) => void;
   removeSnippet: () => void;
 }) {
+  // states
+  const [mode, setMode] = useState<"edit" | "explain">("edit");
+  // explanations
   const [explanations, setExplanations] =
     useState<ExpType[]>(initialExplanations);
+
+  // functions for adding and removing explanations
   const addExplanation = (exp: ExpType) => {
-    setExplanations((prev) => [...prev, exp]);
+    // setExplanations((prev) => [...prev, exp]);
+    setExplanations((prev) => {
+      const copy = [...prev];
+      const existingExpIndex = prev.findIndex(
+        (elm) => elm.lineNumber === exp.lineNumber
+      );
+      if (existingExpIndex !== -1) {
+        copy[existingExpIndex].text = exp.text;
+      } else {
+        copy.push(exp);
+      }
+      return copy;
+    });
   };
   const removeExplanation = (index: number) => {
     setExplanations((prev) => prev.filter((_, i) => i !== index));
@@ -59,7 +76,6 @@ export default function CodeEditor({
   const [activeExplanationNumber, setActiveExplanationNumber] = useState<
     number | null
   >(null);
-  // console.log(activeExplanationNumber);
   // onCLick of left click does not work, so we have to attach an event listener to the whole editor ourself
   useEffect(() => {
     console.log("use effect call");
@@ -98,12 +114,24 @@ export default function CodeEditor({
       <div className="flex justify-between">
         <span>Snippet: {number}</span>
         <div className="self-end flex gap-2">
-          <AddExplanationForm
-            editorRef={editorRef}
-            lineNumber={lineNumber ?? 1}
-            setLineNumber={setLineNumber}
-            addExplanation={addExplanation}
-          />
+          {mode === "edit" && (
+            <Button size="sm" onClick={() => setMode("explain")}>
+              <Icons.tick className="mr-2 text-green-600" /> Confirm Edit
+            </Button>
+          )}
+          {mode === "explain" && (
+            <>
+              <Button onClick={() => setMode("edit")} size="sm">
+                Move Back
+              </Button>
+              <AddExplanationForm
+                editorRef={editorRef}
+                lineNumber={lineNumber ?? 1}
+                setLineNumber={setLineNumber}
+                addExplanation={addExplanation}
+              />
+            </>
+          )}
           <DeleteSingleSnippet removeSnippet={removeSnippet} />
         </div>
       </div>
@@ -115,6 +143,7 @@ export default function CodeEditor({
               tooltipOpen={tooltipOpen}
               setTooltipOpen={setTooltipOpen}
               text={explanations[activeExplanationNumber].text}
+              lineNumber={activeExplanationNumber}
               // text={}
             />
           )}
@@ -132,21 +161,23 @@ export default function CodeEditor({
             fontSize: fontSize,
             padding: { top: 15 },
             glyphMargin: true,
+            readOnly: mode === "explain",
             // readOnly:
           }}
-          value={[
-            '"use strict";',
-            "function Person(age) {",
-            "	if (age) {",
-            "		this.age = age;",
-            "	}",
-            "}",
-            "Person.prototype.getAge = function () {",
-            "	return this.age;",
-            "};",
-          ].join("\n")}
+          // value={[
+          //   '"use strict";',
+          //   "function Person(age) {",
+          //   "	if (age) {",
+          //   "		this.age = age;",
+          //   "	}",
+          //   "}",
+          //   "Person.prototype.getAge = function () {",
+          //   "	return this.age;",
+          //   "};",
+          // ].join("\n")}
           // onChange={(val,e) => {
           // }}
+
           onMount={(editor, monaco) => {
             // set the ref to the editor object
             editorRef.current = editor;
@@ -157,7 +188,7 @@ export default function CodeEditor({
             explanations.forEach((_, i) => {
               editor.createDecorationsCollection([
                 {
-                  range: new monaco.Range(3 + i, 1, 3 + i, 1),
+                  range: new monaco.Range(1 + i, 1, 1 + i, 1),
                   options: {
                     isWholeLine: true,
                     // className: "myContentClass",
@@ -178,20 +209,25 @@ function ExplanationTooltip({
   tooltipOpen,
   setTooltipOpen,
   text,
+  lineNumber,
 }: {
   tooltipOpen: boolean;
   setTooltipOpen: (val: boolean) => void;
   text: string;
+  lineNumber: number;
 }) {
   return (
     <TooltipProvider delayDuration={0}>
       <Tooltip open={tooltipOpen}>
-        <TooltipTrigger style={{ position: "absolute", top: `${5 * 3}%` }}>
+        <TooltipTrigger
+          style={{ position: "absolute", top: `${5 * lineNumber}%` }}
+        >
           {}
         </TooltipTrigger>
         <TooltipContent
           className="border border-white"
           onPointerDownOutside={() => setTooltipOpen(false)}
+
           // {/* Date */}
         >
           <span className="text-white">
