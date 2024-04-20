@@ -16,7 +16,8 @@ import { Icons } from "./icons";
 import React from "react";
 import EmptySnippet from "./empty-snippet";
 import { ActualCodeSnippet, ExpType } from "@/types";
-import exp from "constants";
+import CreateButton from "./create-button";
+// import exp from "constants";
 
 export default function CodeSnippets({
   language,
@@ -35,27 +36,22 @@ export default function CodeSnippets({
   const [theme, setTheme] = React.useState("vs-dark");
   // for fontSize
   const [fontSize, setFontSize] = React.useState(17);
-  // for snippets
+  // function to add a snippet
+  const addSnippet = () => {
+    //! set this later
+    // if (!language || !framework) return;
+    setCodeSnippets((prev) => [
+      ...prev,
+      { language, framework, code: "", explanations: [] },
+    ]);
+  };
 
   return (
     <>
       <div className="space-y-3">
         <div className="flex justify-between items-center">
           <Label className="text-lg">Snippets</Label>
-          <Button
-            size="sm"
-            onClick={() => {
-              //! set this later
-              // if (!language || !framework) return;
-              setCodeSnippets((prev) => [
-                ...prev,
-                { language, framework, code: "", explanations: [] },
-              ]);
-            }}
-          >
-            <Icons.add className="mr-2 h-4 w-4" />
-            Create
-          </Button>
+          <CreateButton addSnippet={addSnippet} />
         </div>
         {codeSnippets.length <= 0 ? (
           <EmptySnippet />
@@ -69,6 +65,10 @@ export default function CodeSnippets({
                 setFontSize={setFontSize}
               />
             </div>
+            <span className="text-xs text-balance">
+              First, write your code snippets. Then, you can add line-by-line
+              explanations
+            </span>
             <div className="space-y-8">
               {codeSnippets.map((snippet, index) => (
                 <CodeEditor
