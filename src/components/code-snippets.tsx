@@ -83,7 +83,7 @@ export default function CodeSnippets({
                       prev.filter((_, i) => i !== index)
                     );
                   }}
-                  code={snippet.code} //later
+                  initialCode={snippet.code} //later
                   // explanations={snippet.explanations} //later
                   initialExplanations={[]} //later
                   // codeSnippets={codeSnippets}

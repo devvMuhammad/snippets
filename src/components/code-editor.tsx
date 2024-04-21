@@ -22,9 +22,10 @@ import { Button } from "./ui/button";
 import { Icons } from "./icons";
 import { ActualCodeSnippet, ExpType } from "@/types";
 import AddExplanationForm from "./add-explanation";
+import RemoveExplanation from "./remove-explanation";
 
 export default function CodeEditor({
-  code,
+  initialCode,
   initialExplanations,
   language,
   theme,
@@ -33,7 +34,7 @@ export default function CodeEditor({
   // addExplanation,
   removeSnippet,
 }: {
-  code: string;
+  initialCode: string;
   initialExplanations: ExpType[];
   language: string;
   theme: string;
@@ -43,6 +44,7 @@ export default function CodeEditor({
   removeSnippet: () => void;
 }) {
   // states
+  const [code, setCode] = useState(initialCode);
   const [mode, setMode] = useState<"edit" | "explain">("edit");
   // explanations
   const [explanations, setExplanations] =
@@ -64,8 +66,10 @@ export default function CodeEditor({
       return copy;
     });
   };
-  const removeExplanation = (index: number) => {
-    setExplanations((prev) => prev.filter((_, i) => i !== index));
+  const removeExplanation = (lineNumber: number) => {
+    setExplanations((prev) =>
+      prev.filter((elm) => elm.lineNumber !== lineNumber)
+    );
   };
   const editorRef = useRef<any>(null);
   console.log(explanations);
@@ -130,12 +134,19 @@ export default function CodeEditor({
                 setLineNumber={setLineNumber}
                 addExplanation={addExplanation}
               />
+              {explanations.length > 0 && (
+                <RemoveExplanation
+                  removeExplanation={removeExplanation}
+                  lineNumber={lineNumber ?? 1}
+                />
+              )}
             </>
           )}
           <DeleteSingleSnippet removeSnippet={removeSnippet} />
         </div>
       </div>
       <div className="relative">
+        {/* responsible for rendering the explanations for a particular code snippet */}
         {explanations.length > 0 &&
           activeExplanationNumber?.toLocaleString() &&
           tooltipOpen && (
@@ -163,6 +174,10 @@ export default function CodeEditor({
             glyphMargin: true,
             readOnly: mode === "explain",
             // readOnly:
+          }}
+          value={code}
+          onChange={(val, e) => {
+            setCode(val || "");
           }}
           // value={[
           //   '"use strict";',
@@ -193,11 +208,16 @@ export default function CodeEditor({
               editor.createDecorationsCollection([
                 {
                   range: new monaco.Range(1 + i, 1, 1 + i, 1),
+
                   options: {
                     isWholeLine: true,
                     // className: "myContentClass",
                     // glyphMarginClassName: "myGlyphMarginClass number-" + i,
                     glyphMarginClassName: `myGlyphMarginClass editor-${number} number-${i}`,
+                    glyphMargin: {
+                      position: 1,
+                    },
+                    stickiness: 1,
                   },
                 },
               ]);
