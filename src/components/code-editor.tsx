@@ -184,6 +184,10 @@ export default function CodeEditor({
             // setLineNumber(editor.getModel()?.getLineCount());
             // console.log("does this get triggered upon a state change???");
             monaco.editor.defineTheme("github-dark", githubDarkTheme as any);
+
+            monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
+              { noSemanticValidation: true, noSyntaxValidation: true }
+            );
             // adds all the explanations
             explanations.forEach((_, i) => {
               editor.createDecorationsCollection([
