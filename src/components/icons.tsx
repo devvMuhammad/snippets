@@ -11,6 +11,7 @@ import {
   Rocket,
   Settings,
   Trash,
+  X,
 } from "lucide-react";
 
 export const Icons = {
@@ -26,4 +27,5 @@ export const Icons = {
   likes: HeartIcon,
   info: Info,
   tick: Check,
+  cross: X,
 };
