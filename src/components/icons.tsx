@@ -1,5 +1,6 @@
 import {
   Calendar,
+  Check,
   Code,
   EllipsisVertical,
   EyeIcon,
@@ -10,6 +11,7 @@ import {
   Rocket,
   Settings,
   Trash,
+  X,
 } from "lucide-react";
 
 export const Icons = {
@@ -24,4 +26,6 @@ export const Icons = {
   eye: EyeIcon,
   likes: HeartIcon,
   info: Info,
+  tick: Check,
+  cross: X,
 };

@@ -7,11 +7,11 @@ export default function EmptySnippet() {
       <FileIcon className="h-10 w-10 text-gray-600" />
       <p className="font-bold">No snippets found </p>
       <p className="text-xs md:text-sm text-balance text-center">
-        Upload a code file or use the '+' button to make one yourself
+        You have not made any snippets yet. Use the '+' button to start
       </p>
-      <Button size="sm" className="mt-2">
+      {/* <Button size="sm" className="mt-2">
         Upload
-      </Button>
+      </Button> */}
     </div>
   );
 }

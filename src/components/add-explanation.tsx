@@ -1,3 +1,4 @@
+import { ExpType } from "@/types";
 import { Icons } from "./icons";
 import { Button } from "./ui/button";
 import {
@@ -12,19 +13,24 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
+import { useState } from "react";
 
 export default function AddExplanationForm({
-  editorRef,
-  setLineNumber,
   lineNumber,
+  setLineNumber,
+  editorRef,
+  addExplanation,
 }: {
   lineNumber: number;
   setLineNumber: (num: number) => void;
   editorRef: any;
+  addExplanation: (exp: ExpType) => void;
 }) {
+  const [explanation, setExplanation] = useState("");
+  const [inputLineNumber, setInputLineNumber] = useState<number>(1);
+  const [dialogOpen, setDialogOpen] = useState(false);
   return (
-    // <div className="self-end flex gap-2">
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <Button
           size="sm"
@@ -54,7 +60,9 @@ export default function AddExplanationForm({
               id="name"
               min={1}
               max={lineNumber ?? 1}
-              defaultValue={1}
+              // defaultValue={1}
+              value={inputLineNumber}
+              onChange={(e) => setInputLineNumber(Number(e.target.value))}
               className="w-[100px]"
             />
           </div>
@@ -65,22 +73,25 @@ export default function AddExplanationForm({
             <Textarea
               id="explanation"
               placeholder="explanation for the line goes here ..."
+              onChange={(e) => setExplanation(e.target.value)}
             />
           </div>
         </div>
         <DialogFooter>
           <Button
             type="submit"
-            onClick={() =>
-              console.log(editorRef.current.getModel().getLineCount())
-            }
+            onClick={() => {
+              addExplanation({
+                lineNumber: inputLineNumber,
+                text: explanation,
+              });
+              setDialogOpen(false);
+            }}
           >
             Save changes
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-
-    // </div>
   );
 }

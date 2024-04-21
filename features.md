@@ -28,3 +28,8 @@
 - views
 - smooth animations
 - supabase authetication and authorization
+
+# CURRENT STATE (WHAT TO DO NEXT)
+
+- fix any small test cases in the editor page
+- add backend to it now
