@@ -74,7 +74,7 @@ export const CodeEditor = memo(function ({
       prev.filter((elm) => elm.lineNumber !== lineNumber)
     );
   };
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<unknown>(null);
   // console.log(explanations);
   // const
   const [tooltipOpen, setTooltipOpen] = useState(false);
