@@ -23,6 +23,7 @@ import { Icons } from "./icons";
 import { ExpType } from "@/types";
 import AddExplanationForm from "./add-explanation";
 import RemoveExplanation from "./remove-explanation";
+import { useTestContext } from "./test-context";
 
 export const CodeEditor = memo(function ({
   initialCode,
@@ -44,7 +45,7 @@ export const CodeEditor = memo(function ({
   removeSnippet: () => void;
 }) {
   // const allEditorsRef = useRef<>
-  console.log("child re");
+  const { increment } = useTestContext();
   // states
   const [code, setCode] = useState(initialCode);
   const [mode, setMode] = useState<"edit" | "explain">("edit");
@@ -119,6 +120,7 @@ export const CodeEditor = memo(function ({
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
         <span>Snippet: {number}</span>
+        <Button onClick={increment}>Test</Button>
         <div className="self-end flex gap-2">
           {mode === "edit" && (
             <Button size="sm" onClick={() => setMode("explain")}>

@@ -13,10 +13,11 @@ import {
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { Icons } from "./icons";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useContext, useEffect, useRef, useState } from "react";
 import EmptySnippet from "./empty-snippet";
 import { CodeSnippetType, ExpType } from "@/types";
 import CreateButton from "./create-button";
+import { useTestContext } from "./test-context";
 // import exp from "constants";
 
 export const CodeSnippets = memo(function ({
@@ -30,6 +31,8 @@ export const CodeSnippets = memo(function ({
   initialCodeSnippets?: CodeSnippetType[];
   // setConfigChangesMade: (val: boolean) => void;
 }) {
+  const { test } = useTestContext();
+  console.log(test, "rendered");
   //! additional tip, save progress after every 2 seconds, check this later
   //! when kaafi kaam hochuka hai, then issue warning before changing the language or framework
   // a ref for getting code changes

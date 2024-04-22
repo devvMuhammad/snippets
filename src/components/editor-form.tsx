@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { languages } from "@/config/languages";
 import CodeSnippets from "./code-snippets";
 import { CodeSnippetType, EditorPageData } from "@/types";
+import { TestContextProvider } from "./test-context";
 
 // receives the initial data from the server
 export default function EditorForm({
@@ -227,13 +228,15 @@ export default function EditorForm({
           </Popover>
         </div>
       )}{" "}
-      <CodeSnippets
-        initialCodeSnippets={memoizedIntialData}
-        // setConfigChangesMade={setConfigChangesMade}
-        key={value}
-        language={value}
-        framework={frameworkValue}
-      />
+      <TestContextProvider>
+        <CodeSnippets
+          initialCodeSnippets={memoizedIntialData}
+          // setConfigChangesMade={setConfigChangesMade}
+          key={value}
+          language={value}
+          framework={frameworkValue}
+        />
+      </TestContextProvider>
     </>
   );
 }
