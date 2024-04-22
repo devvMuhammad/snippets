@@ -33,3 +33,10 @@
 
 - fix any small test cases in the editor page
 - add backend to it now
+
+# BACKEND FUNCTIONALITIES TO ADD
+
+- fetch current snippets on the main page
+- clicking the create button or the edit page on the snippet should open the editor page
+- create a save changes button that will save all your changes to the database
+- if unsaved changes, then make an alert dialog to tell to save or change
