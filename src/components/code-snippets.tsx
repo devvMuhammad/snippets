@@ -13,29 +13,39 @@ import {
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { Icons } from "./icons";
-import React from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import EmptySnippet from "./empty-snippet";
-import { ActualCodeSnippet, ExpType } from "@/types";
+import { CodeSnippetType, ExpType } from "@/types";
 import CreateButton from "./create-button";
 // import exp from "constants";
 
-export default function CodeSnippets({
+export const CodeSnippets = memo(function ({
   language,
   framework,
-}: {
+  initialCodeSnippets,
+}: // setConfigChangesMade,
+{
   language: string;
   framework: string;
+  initialCodeSnippets?: CodeSnippetType[];
+  // setConfigChangesMade: (val: boolean) => void;
 }) {
   //! additional tip, save progress after every 2 seconds, check this later
   //! when kaafi kaam hochuka hai, then issue warning before changing the language or framework
-  // array of snippets
-  const [codeSnippets, setCodeSnippets] = React.useState<ActualCodeSnippet[]>(
-    []
+  // a ref for getting code changes
+  const allEditorsRef = useRef<CodeSnippetType[]>([]);
+  // function updateAllEditorsRef
+  // array of snippets (just for initial data and keeping track of separate code blocks)
+  const [codeSnippets, setCodeSnippets] = useState<CodeSnippetType[]>(
+    initialCodeSnippets || [{ code: "tiz", explanations: [] }]
   );
+  // console.log(codeSnippets);
+  // for unsaved changes in the code
+  const [codeChangesMade, setCodeChangesMade] = useState(false);
   // for theme
-  const [theme, setTheme] = React.useState("vs-dark");
+  const [theme, setTheme] = useState("vs-dark");
   // for fontSize
-  const [fontSize, setFontSize] = React.useState(17);
+  const [fontSize, setFontSize] = useState(17);
   // function to add a snippet
   const addSnippet = () => {
     //! set this later
@@ -45,6 +55,16 @@ export default function CodeSnippets({
       { language, framework, code: "", explanations: [] },
     ]);
   };
+  // console.log("checking for render");
+  // nnnnnnnnnnnnn
+  useEffect(() => {
+    console.log("inner useEffect for codeSnippets");
+    if (JSON.stringify(codeSnippets) !== JSON.stringify(initialCodeSnippets)) {
+      setCodeChangesMade(true);
+    } else {
+      setCodeChangesMade(false);
+    }
+  }, [codeSnippets]);
 
   return (
     <>
@@ -85,7 +105,7 @@ export default function CodeSnippets({
                   }}
                   initialCode={snippet.code} //later
                   // explanations={snippet.explanations} //later
-                  initialExplanations={[]} //later
+                  initialExplanations={snippet.explanations} //later
                   // codeSnippets={codeSnippets}
                 />
               ))}
@@ -95,7 +115,7 @@ export default function CodeSnippets({
       </div>
     </>
   );
-}
+});
 
 function ThemeAndFontSelects({
   theme,
@@ -161,3 +181,5 @@ function ThemeAndFontSelects({
     </>
   );
 }
+
+export default CodeSnippets;

@@ -15,40 +15,115 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronsUpDown, Code } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { languages } from "@/config/languages";
 import CodeSnippets from "./code-snippets";
+import { CodeSnippetType, EditorPageData } from "@/types";
 
-export default function EditorForm() {
-  // for language
-  const [languageOpen, setLanguageOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
-  // for framework
-  const [frameworkOpen, setFrameworkOpen] = React.useState(false);
-  const [frameworkValue, setFrameworkValue] = React.useState("");
-  // current framework array based on the language selected
+// receives the initial data from the server
+export default function EditorForm({
+  initialData,
+}: {
+  initialData: EditorPageData | null;
+}) {
+  // memoized intial data
+  const memoizedIntialData = useMemo(() => initialData?.codeSnippets || [], []);
+  // for tracking saved and unsaved changes
+  const [configChangesMade, setConfigChangesMade] = React.useState(false);
+  // for title and description
+  const [title, setTitle] = React.useState(initialData?.title || "");
+  const [description, setDescription] = React.useState(
+    initialData?.description || ""
+  );
+  // for language and framework selection
+  const [value, setValue] = React.useState(initialData?.language || ""); // value refers to the selected language
+  const [frameworkValue, setFrameworkValue] = React.useState(
+    initialData?.framework || ""
+  ); // value refers to the selected framework
+  // open states for the popovers
+  const [languageOpen, setLanguageOpen] = React.useState(false); // for the tooltip
+  const [frameworkOpen, setFrameworkOpen] = React.useState(false); // for the tooltip
+  // current array of frameworks based on the language selected
   const currentFrameworkArray = languages.find(
     (language) => language.value === value
   )?.frameworks;
-  // for snippets
+
+  useEffect(() => {
+    console.log("outer use effect");
+    // console.log(
+    //   {
+    //     title,
+    //     description,
+    //     language: value,
+    //     framework: frameworkValue,
+    //   },
+    //   "intial Data",
+    //   {
+    //     title: initialData?.title,
+    //     description: initialData?.description,
+    //     language: initialData?.language,
+    //     framework: initialData?.framework,
+    //   }
+    // );
+    console.log(
+      JSON.stringify({
+        title,
+        description,
+        language: value,
+        framework: frameworkValue,
+      }) !==
+        JSON.stringify({
+          title: initialData?.title,
+          description: initialData?.description,
+          language: initialData?.language,
+          framework: initialData?.framework,
+        })
+    );
+    if (
+      JSON.stringify({
+        title,
+        description,
+        language: value,
+        framework: frameworkValue,
+      }) !==
+      JSON.stringify({
+        title: initialData?.title,
+        description: initialData?.description,
+        language: initialData?.language,
+        framework: initialData?.framework,
+      })
+    ) {
+      setConfigChangesMade(true);
+    } else {
+      setConfigChangesMade(false);
+    }
+  }, [title, description, value, frameworkValue]);
 
   return (
     <>
       {" "}
+      {configChangesMade && <h1>Unsaved Changes</h1>}
       <div className="space-y-2">
         <Label htmlFor="title" className="inline text-lg">
           Title
         </Label>
-        <Input id="title" placeholder="Title for your snippet goes here ..." />
+        <Input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          id="title"
+          placeholder="Title for your snippet goes here ..."
+        />
       </div>
       <div className="space-y-2">
         <Label htmlFor="description" className="inline text-lg">
           Description
         </Label>
         <Textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           id="description"
           placeholder="Description for your snippet goes here ..."
         />
@@ -152,7 +227,13 @@ export default function EditorForm() {
           </Popover>
         </div>
       )}{" "}
-      <CodeSnippets key={value} language={value} framework={frameworkValue} />
+      <CodeSnippets
+        initialCodeSnippets={memoizedIntialData}
+        // setConfigChangesMade={setConfigChangesMade}
+        key={value}
+        language={value}
+        framework={frameworkValue}
+      />
     </>
   );
 }
