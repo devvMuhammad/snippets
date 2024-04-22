@@ -33,7 +33,7 @@ export const CodeSnippets = memo(function ({
   //! additional tip, save progress after every 2 seconds, check this later
   //! when kaafi kaam hochuka hai, then issue warning before changing the language or framework
   // a ref for getting code changes
-  const allEditorsRef = useRef<CodeSnippetType[]>([]);
+  // const allEditorsRef = useRef<CodeSnippetType[]>([]);
   // function updateAllEditorsRef
   // array of snippets (just for initial data and keeping track of separate code blocks)
   const [codeSnippets, setCodeSnippets] = useState<CodeSnippetType[]>(

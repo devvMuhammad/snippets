@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { Editor as MonacoEditor, loader } from "@monaco-editor/react";
 import { githubDarkTheme } from "@/config/themes/github-dark";
 import {
@@ -20,11 +20,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "./ui/button";
 import { Icons } from "./icons";
-import { ActualCodeSnippet, ExpType } from "@/types";
+import { ExpType } from "@/types";
 import AddExplanationForm from "./add-explanation";
 import RemoveExplanation from "./remove-explanation";
 
-export default function CodeEditor({
+export const CodeEditor = memo(function ({
   initialCode,
   initialExplanations,
   language,
@@ -43,6 +43,8 @@ export default function CodeEditor({
   // addExplanation: (exp: ExpType) => void;
   removeSnippet: () => void;
 }) {
+  // const allEditorsRef = useRef<>
+  console.log("child re");
   // states
   const [code, setCode] = useState(initialCode);
   const [mode, setMode] = useState<"edit" | "explain">("edit");
@@ -72,7 +74,7 @@ export default function CodeEditor({
     );
   };
   const editorRef = useRef<any>(null);
-  console.log(explanations);
+  // console.log(explanations);
   // const
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const [lineNumber, setLineNumber] = useState<number | null>();
@@ -227,7 +229,7 @@ export default function CodeEditor({
       </div>
     </div>
   );
-}
+});
 
 function ExplanationTooltip({
   tooltipOpen,
@@ -306,3 +308,5 @@ function DeleteSingleSnippet({ removeSnippet }: { removeSnippet: () => void }) {
     </>
   );
 }
+
+export default CodeEditor;
