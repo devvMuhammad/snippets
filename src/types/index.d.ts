@@ -17,10 +17,16 @@ type ExpType = {
   text: string;
 };
 
-export type ActualCodeSnippet = {
+export type CodeSnippetType = {
   // will check later if these two properties are required or not
-  language?: string;
-  framework?: string | null;
   code: string;
   explanations: ExpType[];
+};
+
+export type EditorPageData = {
+  title: string;
+  description: string;
+  language: string;
+  framework: string | null;
+  codeSnippets: CodeSnippetType[];
 };
