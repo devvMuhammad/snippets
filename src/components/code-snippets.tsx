@@ -11,13 +11,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "./ui/label";
-import { Button } from "./ui/button";
-import { Icons } from "./icons";
-import { memo, useContext, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import EmptySnippet from "./empty-snippet";
 import { CodeSnippetType, ExpType } from "@/types";
 import CreateButton from "./create-button";
-import { useTestContext } from "./test-context";
 // import exp from "constants";
 
 export const CodeSnippets = memo(function ({
@@ -31,23 +28,31 @@ export const CodeSnippets = memo(function ({
   initialCodeSnippets?: CodeSnippetType[];
   // setConfigChangesMade: (val: boolean) => void;
 }) {
-  const { test } = useTestContext();
-  console.log(test, "rendered");
-  //! additional tip, save progress after every 2 seconds, check this later
+  // we make a shallow becuase if we pass this directly, the intialCodeSnippets is also changed because we change the initalEditorsRef mutably which will change the intialCodeSnippets array as well
+  const initialCodeSnippetsCopy = [
+    ...(initialCodeSnippets as CodeSnippetType[]),
+  ];
+  const allEditorsRef = useRef<CodeSnippetType[]>(
+    initialCodeSnippetsCopy || []
+  );
+  // functions for updating refs
+  const updateAllEditorsRef = useCallback(
+    (index: number, code: string, explanations: ExpType[]) => {
+      console.log(allEditorsRef.current);
+      allEditorsRef.current[index] = { code, explanations };
+    },
+    []
+  );
+
   //! when kaafi kaam hochuka hai, then issue warning before changing the language or framework
-  // a ref for getting code changes
-  // const allEditorsRef = useRef<CodeSnippetType[]>([]);
-  // function updateAllEditorsRef
   // array of snippets (just for initial data and keeping track of separate code blocks)
   const [codeSnippets, setCodeSnippets] = useState<CodeSnippetType[]>(
     initialCodeSnippets || [{ code: "tiz", explanations: [] }]
   );
-  // console.log(codeSnippets);
   // for unsaved changes in the code
   const [codeChangesMade, setCodeChangesMade] = useState(false);
-  // for theme
+  // for theme and fontSize
   const [theme, setTheme] = useState("vs-dark");
-  // for fontSize
   const [fontSize, setFontSize] = useState(17);
   // function to add a snippet
   const addSnippet = () => {
@@ -58,17 +63,6 @@ export const CodeSnippets = memo(function ({
       { language, framework, code: "", explanations: [] },
     ]);
   };
-  // console.log("checking for render");
-  // nnnnnnnnnnnnn
-  useEffect(() => {
-    console.log("inner useEffect for codeSnippets");
-    if (JSON.stringify(codeSnippets) !== JSON.stringify(initialCodeSnippets)) {
-      setCodeChangesMade(true);
-    } else {
-      setCodeChangesMade(false);
-    }
-  }, [codeSnippets]);
-
   return (
     <>
       <div className="space-y-3">
@@ -93,28 +87,37 @@ export const CodeSnippets = memo(function ({
               explanations
             </span>
             <div className="space-y-8">
-              {codeSnippets.map((snippet, index) => (
-                <CodeEditor
-                  key={index}
-                  language={language}
-                  theme={theme}
-                  fontSize={fontSize}
-                  number={index + 1}
-                  removeSnippet={() => {
-                    // replace this with db logic later, no state will be involved here
-                    setCodeSnippets((prev) =>
-                      prev.filter((_, i) => i !== index)
-                    );
-                  }}
-                  initialCode={snippet.code} //later
-                  // explanations={snippet.explanations} //later
-                  initialExplanations={snippet.explanations} //later
-                  // codeSnippets={codeSnippets}
-                />
-              ))}
+              {initialCodeSnippets &&
+                codeSnippets &&
+                codeSnippets.map((snippet, index) => (
+                  <CodeEditor
+                    key={index}
+                    index={index}
+                    language={language}
+                    theme={theme}
+                    fontSize={fontSize}
+                    number={index + 1}
+                    removeSnippet={() => {
+                      // replace this with db logic later, no state will be involved here
+                      setCodeSnippets((prev) =>
+                        prev.filter((_, i) => i !== index)
+                      );
+                    }}
+                    initialCode={initialCodeSnippets[index].code} //later
+                    // explanations={snippet.explanations} //later
+                    initialExplanations={
+                      initialCodeSnippets[index].explanations
+                    } //later
+                    // codeSnippets={codeSnippets}
+                    // currentEditorRef={allEditorsRef.current[index]}
+                    updateAllEditorsRef={updateAllEditorsRef}
+                    setCodeChangesMade={setCodeChangesMade}
+                  />
+                ))}
             </div>
           </>
         )}
+        {codeChangesMade && <h1>Unsaved Changes</h1>}
       </div>
     </>
   );

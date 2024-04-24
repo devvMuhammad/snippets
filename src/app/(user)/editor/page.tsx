@@ -12,11 +12,20 @@ export default function Editor() {
     framework: "React",
     codeSnippets: [
       {
-        code: "console.log('Hello World!')",
+        code: "console.log('Hello World!');",
         explanations: [
           {
             lineNumber: 1,
             text: "This is a simple console.log statement",
+          },
+        ],
+      },
+      {
+        code: "const a = 25;",
+        explanations: [
+          {
+            lineNumber: 1,
+            text: "This is a simple variable declaration with a being set to 25",
           },
         ],
       },

@@ -1,6 +1,13 @@
 "use client";
-import { memo, useEffect, useRef, useState } from "react";
-import { Editor as MonacoEditor, loader } from "@monaco-editor/react";
+import {
+  Dispatch,
+  SetStateAction,
+  memo,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { Editor as MonacoEditor } from "@monaco-editor/react";
 import { githubDarkTheme } from "@/config/themes/github-dark";
 import {
   Tooltip,
@@ -23,9 +30,9 @@ import { Icons } from "./icons";
 import { ExpType } from "@/types";
 import AddExplanationForm from "./add-explanation";
 import RemoveExplanation from "./remove-explanation";
-import { useTestContext } from "./test-context";
 
 export const CodeEditor = memo(function ({
+  index,
   initialCode,
   initialExplanations,
   language,
@@ -34,22 +41,26 @@ export const CodeEditor = memo(function ({
   number,
   // addExplanation,
   removeSnippet,
+  updateAllEditorsRef,
+  setCodeChangesMade,
 }: {
+  index: number;
   initialCode: string;
   initialExplanations: ExpType[];
   language: string;
   theme: string;
   fontSize: number;
   number: number;
-  // addExplanation: (exp: ExpType) => void;
   removeSnippet: () => void;
+  updateAllEditorsRef: (
+    index: number,
+    code: string,
+    explanations: ExpType[]
+  ) => void;
+  setCodeChangesMade: Dispatch<SetStateAction<boolean>>;
 }) {
-  // const allEditorsRef = useRef<>
-  const { increment } = useTestContext();
-  // states
   const [code, setCode] = useState(initialCode);
   const [mode, setMode] = useState<"edit" | "explain">("edit");
-  // explanations
   const [explanations, setExplanations] =
     useState<ExpType[]>(initialExplanations);
 
@@ -75,15 +86,13 @@ export const CodeEditor = memo(function ({
     );
   };
   const editorRef = useRef<unknown>(null);
-  // console.log(explanations);
-  // const
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const [lineNumber, setLineNumber] = useState<number | null>();
   // this is the explanation among all explanations that is currently being active
   const [activeExplanationNumber, setActiveExplanationNumber] = useState<
     number | null
   >(null);
-  // onCLick of left click does not work, so we have to attach an event listener to the whole editor ourself
+  // onClick of left click does not work, so we have to attach an event listener to the whole editor ourself
   useEffect(() => {
     console.log("use effect call");
     const eventHandler = (e: Event) => {
@@ -91,11 +100,7 @@ export const CodeEditor = memo(function ({
       // attach event to the whole editor and then check if the glyph margin is clicked
       const target = e.target as HTMLElement;
       const targetClassListArr = [...(target.classList as unknown as string[])];
-      if (
-        targetClassListArr.find((elm) => elm.match(/number-\d/))
-        // targetClassListArr.includes(`editor-${number}`)
-      ) {
-        // console.log("clicked on the glyph margin");
+      if (targetClassListArr.find((elm) => elm.match(/number-\d/))) {
         const selectedExplanationNumber = targetClassListArr
           .find((elm) => elm.match(/number-\d/))
           ?.split("-")[1] as string;
@@ -116,11 +121,30 @@ export const CodeEditor = memo(function ({
     };
   }, [explanations]);
 
+  useEffect(() => {
+    updateAllEditorsRef(index, code, explanations);
+    console.log(
+      "initial code",
+      JSON.stringify({
+        code: initialCode,
+      })
+    );
+    console.log("current code", JSON.stringify({ code }));
+
+    if (
+      JSON.stringify({ code, explanations }) !==
+      JSON.stringify({ code: initialCode, explanations: initialExplanations })
+    ) {
+      setCodeChangesMade(true);
+    } else {
+      setCodeChangesMade(false);
+    }
+  }, [code, explanations]);
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
         <span>Snippet: {number}</span>
-        <Button onClick={increment}>Test</Button>
         <div className="self-end flex gap-2">
           {mode === "edit" && (
             <Button size="sm" onClick={() => setMode("explain")}>
@@ -183,25 +207,9 @@ export const CodeEditor = memo(function ({
           onChange={(val, e) => {
             setCode(val || "");
           }}
-          // value={[
-          //   '"use strict";',
-          //   "function Person(age) {",
-          //   "	if (age) {",
-          //   "		this.age = age;",
-          //   "	}",
-          //   "}",
-          //   "Person.prototype.getAge = function () {",
-          //   "	return this.age;",
-          //   "};",
-          // ].join("\n")}
-          // onChange={(val,e) => {
-          // }}
-
           onMount={(editor, monaco) => {
             // set the ref to the editor object
             editorRef.current = editor;
-            // setLineNumber(editor.getModel()?.getLineCount());
-            // console.log("does this get triggered upon a state change???");
             monaco.editor.defineTheme("github-dark", githubDarkTheme as any);
 
             monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
@@ -215,8 +223,6 @@ export const CodeEditor = memo(function ({
 
                   options: {
                     isWholeLine: true,
-                    // className: "myContentClass",
-                    // glyphMarginClassName: "myGlyphMarginClass number-" + i,
                     glyphMarginClassName: `myGlyphMarginClass editor-${number} number-${i}`,
                     glyphMargin: {
                       position: 1,

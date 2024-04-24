@@ -69,24 +69,24 @@ export default function EditorForm({
     //     framework: initialData?.framework,
     //   }
     // );
-    console.log(
-      JSON.stringify({
-        title,
-        description,
-        language: value,
-        framework: frameworkValue,
-      }) !==
-        JSON.stringify({
-          title: initialData?.title,
-          description: initialData?.description,
-          language: initialData?.language,
-          framework: initialData?.framework,
-        })
-    );
+    // console.log(
+    //   JSON.stringify({
+    //     title,
+    //     description,
+    //     language: value,
+    //     framework: frameworkValue,
+    //   }) !==
+    //     JSON.stringify({
+    //       title: initialData?.title,
+    //       description: initialData?.description,
+    //       language: initialData?.language,
+    //       framework: initialData?.framework,
+    //     })
+    // );
     if (
       JSON.stringify({
-        title,
-        description,
+        title: title.replace(/\s*$/, ""),
+        description: description.replace(/\s*$/, ""),
         language: value,
         framework: frameworkValue,
       }) !==
@@ -228,15 +228,15 @@ export default function EditorForm({
           </Popover>
         </div>
       )}{" "}
-      <TestContextProvider>
-        <CodeSnippets
-          initialCodeSnippets={memoizedIntialData}
-          // setConfigChangesMade={setConfigChangesMade}
-          key={value}
-          language={value}
-          framework={frameworkValue}
-        />
-      </TestContextProvider>
+      {/* <TestContextProvider> */}
+      <CodeSnippets
+        initialCodeSnippets={memoizedIntialData}
+        // setConfigChangesMade={setConfigChangesMade}
+        key={value}
+        language={value}
+        framework={frameworkValue}
+      />
+      {/* </TestContextProvider> */}
     </>
   );
 }
