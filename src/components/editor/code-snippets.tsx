@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Label } from "./ui/label";
+import { Label } from "../ui/label";
 import { memo, useCallback, useRef, useState } from "react";
 import EmptySnippet from "./empty-snippet";
 import { CodeSnippetType, ExpType } from "@/types";

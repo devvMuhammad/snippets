@@ -1,15 +1,15 @@
 "use client";
 import { useState } from "react";
-import { Icons } from "./icons";
-import { Button } from "./ui/button";
+import { Icons } from "../icons";
+import { Button } from "../ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./ui/tooltip";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+} from "../ui/tooltip";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
 
 export default function RemoveExplanation({
   removeExplanation,

@@ -14,7 +14,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./ui/tooltip";
+} from "../ui/tooltip";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,8 +25,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "./ui/button";
-import { Icons } from "./icons";
+import { Button } from "../ui/button";
+import { Icons } from "../icons";
 import { ExpType } from "@/types";
 import AddExplanationForm from "./add-explanation";
 import RemoveExplanation from "./remove-explanation";

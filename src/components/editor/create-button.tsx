@@ -1,13 +1,13 @@
 "use client";
 
-import { Icons } from "./icons";
-import { Button } from "./ui/button";
+import { Icons } from "../icons";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 
 export default function CreateButton({
   addSnippet,

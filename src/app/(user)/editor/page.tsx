@@ -1,4 +1,4 @@
-import EditorForm from "@/components/editor-form";
+import EditorForm from "@/components/editor/editor-form";
 
 export const metadata = {
   title: "Editor",

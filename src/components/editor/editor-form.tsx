@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 import { languages } from "@/config/languages";
 import CodeSnippets from "./code-snippets";
 import { CodeSnippetType, EditorPageData } from "@/types";
-import { TestContextProvider } from "./test-context";
+import { TestContextProvider } from "../test-context";
 
 // receives the initial data from the server
 export default function EditorForm({
