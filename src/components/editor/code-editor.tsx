@@ -119,7 +119,7 @@ export const CodeEditor = memo(function ({
         .querySelector(`.editor-${number}`)
         ?.removeEventListener("click", eventHandler);
     };
-  }, [explanations]);
+  }, [explanations, number]);
 
   useEffect(() => {
     updateAllEditorsRef(index, code, explanations);
@@ -139,7 +139,7 @@ export const CodeEditor = memo(function ({
     } else {
       setCodeChangesMade(false);
     }
-  }, [code, explanations]);
+  }, [code, explanations, index, initialCode, initialExplanations, setCodeChangesMade, updateAllEditorsRef]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -317,4 +317,5 @@ function DeleteSingleSnippet({ removeSnippet }: { removeSnippet: () => void }) {
   );
 }
 
+CodeEditor.displayName = "CodeEditor";
 export default CodeEditor;
