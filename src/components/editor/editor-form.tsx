@@ -21,8 +21,7 @@ import { Check, ChevronsUpDown, Code } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { languages } from "@/config/languages";
 import CodeSnippets from "./code-snippets";
-import { CodeSnippetType, EditorPageData } from "@/types";
-import { TestContextProvider } from "../test-context";
+import { EditorPageData } from "@/types";
 
 // receives the initial data from the server
 export default function EditorForm({
@@ -54,35 +53,6 @@ export default function EditorForm({
 
   useEffect(() => {
     console.log("outer use effect");
-    // console.log(
-    //   {
-    //     title,
-    //     description,
-    //     language: value,
-    //     framework: frameworkValue,
-    //   },
-    //   "intial Data",
-    //   {
-    //     title: initialData?.title,
-    //     description: initialData?.description,
-    //     language: initialData?.language,
-    //     framework: initialData?.framework,
-    //   }
-    // );
-    // console.log(
-    //   JSON.stringify({
-    //     title,
-    //     description,
-    //     language: value,
-    //     framework: frameworkValue,
-    //   }) !==
-    //     JSON.stringify({
-    //       title: initialData?.title,
-    //       description: initialData?.description,
-    //       language: initialData?.language,
-    //       framework: initialData?.framework,
-    //     })
-    // );
     if (
       JSON.stringify({
         title: title.replace(/\s*$/, ""),
@@ -202,6 +172,7 @@ export default function EditorForm({
                         key={framework}
                         value={framework}
                         onSelect={(currentFrameworkArray) => {
+                          // set
                           setFrameworkValue(
                             currentFrameworkArray === value
                               ? ""
