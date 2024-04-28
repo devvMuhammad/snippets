@@ -190,4 +190,5 @@ function ThemeAndFontSelects({
   );
 }
 
+CodeSnippets.displayName = "CodeSnippets";
 export default CodeSnippets;

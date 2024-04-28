@@ -30,7 +30,10 @@ export default function EditorForm({
   initialData: EditorPageData | null;
 }) {
   // memoized intial data
-  const memoizedIntialData = useMemo(() => initialData?.codeSnippets || [], []);
+  const memoizedIntialData = useMemo(
+    () => initialData?.codeSnippets || [],
+    [initialData?.codeSnippets]
+  );
   // for tracking saved and unsaved changes
   const [configChangesMade, setConfigChangesMade] = React.useState(false);
   // for title and description
@@ -53,6 +56,7 @@ export default function EditorForm({
 
   useEffect(() => {
     console.log("outer use effect");
+
     if (
       JSON.stringify({
         title: title.replace(/\s*$/, ""),
@@ -71,7 +75,16 @@ export default function EditorForm({
     } else {
       setConfigChangesMade(false);
     }
-  }, [title, description, value, frameworkValue]);
+  }, [
+    title,
+    description,
+    value,
+    frameworkValue,
+    initialData?.title,
+    initialData?.description,
+    initialData?.language,
+    initialData?.framework,
+  ]);
 
   return (
     <>
