@@ -60,9 +60,13 @@ export const CodeSnippets = memo(function ({
     // if (!language || !framework) return;
     setCodeSnippets((prev) => [
       ...prev,
-      { language, framework, code: "", explanations: [] },
+      {
+        code: "//start writing code here",
+        explanations: [],
+      },
     ]);
   };
+  console.log(codeSnippets);
   return (
     <>
       <div className="space-y-3">
@@ -103,11 +107,9 @@ export const CodeSnippets = memo(function ({
                         prev.filter((_, i) => i !== index)
                       );
                     }}
-                    initialCode={initialCodeSnippets[index].code} //later
+                    initialCode={snippet.code} //later
                     // explanations={snippet.explanations} //later
-                    initialExplanations={
-                      initialCodeSnippets[index].explanations
-                    } //later
+                    initialExplanations={snippet.explanations} //later
                     // codeSnippets={codeSnippets}
                     // currentEditorRef={allEditorsRef.current[index]}
                     updateAllEditorsRef={updateAllEditorsRef}
