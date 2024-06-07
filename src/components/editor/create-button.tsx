@@ -26,7 +26,12 @@ export default function CreateButton({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem onSelect={addSnippet}>
+        <DropdownMenuItem
+          onSelect={() => {
+            addSnippet();
+            // window.scrollTo(0, 9999999999999999999999999);
+          }}
+        >
           Write Yourself
         </DropdownMenuItem>
         {/* will be implemeted later */}

@@ -30,6 +30,15 @@ import { Icons } from "../icons";
 import { ExpType } from "@/types";
 import AddExplanationForm from "./add-explanation";
 import RemoveExplanation from "./remove-explanation";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
 
 export const CodeEditor = memo(function ({
   index,
@@ -63,7 +72,7 @@ export const CodeEditor = memo(function ({
   const [mode, setMode] = useState<"edit" | "explain">("edit");
   const [explanations, setExplanations] =
     useState<ExpType[]>(initialExplanations);
-
+  console.log(explanations);
   // functions for adding and removing explanations
   const addExplanation = (exp: ExpType) => {
     // setExplanations((prev) => [...prev, exp]);
@@ -86,7 +95,7 @@ export const CodeEditor = memo(function ({
     );
   };
   const editorRef = useRef<unknown>(null);
-  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
   const [lineNumber, setLineNumber] = useState<number | null>();
   // this is the explanation among all explanations that is currently being active
   const [activeExplanationNumber, setActiveExplanationNumber] = useState<
@@ -106,7 +115,7 @@ export const CodeEditor = memo(function ({
           ?.split("-")[1] as string;
         setActiveExplanationNumber(+selectedExplanationNumber);
 
-        setTooltipOpen(true);
+        setSheetOpen(true);
       }
     };
 
@@ -176,18 +185,19 @@ export const CodeEditor = memo(function ({
       <div className="relative">
         {/* responsible for rendering the explanations for a particular code snippet */}
         {explanations.length > 0 &&
-          activeExplanationNumber?.toLocaleString() &&
-          tooltipOpen && (
-            <ExplanationTooltip
-              tooltipOpen={tooltipOpen}
-              setTooltipOpen={setTooltipOpen}
-              text={explanations[activeExplanationNumber].text}
+          activeExplanationNumber?.toLocaleString() && (
+            <ExplanationSidebar
+              sheetOpen={sheetOpen}
+              setSheetOpen={setSheetOpen}
+              text={
+                explanations[activeExplanationNumber - 1]?.text || "default"
+              }
               lineNumber={activeExplanationNumber}
               // text={}
             />
           )}
         <MonacoEditor
-          // key={tooltipOpen}
+          // key={sheetOpen}
           key={explanations.length}
           className={`editor-${number}`}
           height="30vh"
@@ -216,14 +226,14 @@ export const CodeEditor = memo(function ({
               { noSemanticValidation: true, noSyntaxValidation: true }
             );
             // adds all the explanations
-            explanations.forEach((_, i) => {
+            explanations.forEach((elm, i) => {
               editor.createDecorationsCollection([
                 {
-                  range: new monaco.Range(1 + i, 1, 1 + i, 1),
+                  range: new monaco.Range(elm.lineNumber, 1, elm.lineNumber, 1),
 
                   options: {
                     isWholeLine: true,
-                    glyphMarginClassName: `myGlyphMarginClass editor-${number} number-${i}`,
+                    glyphMarginClassName: `myGlyphMarginClass editor-${elm.lineNumber} number-${elm.lineNumber}`,
                     glyphMargin: {
                       position: 1,
                     },
@@ -239,38 +249,31 @@ export const CodeEditor = memo(function ({
   );
 });
 
-function ExplanationTooltip({
-  tooltipOpen,
-  setTooltipOpen,
+function ExplanationSidebar({
+  sheetOpen,
+  setSheetOpen,
   text,
   lineNumber,
 }: {
-  tooltipOpen: boolean;
-  setTooltipOpen: (val: boolean) => void;
+  sheetOpen: boolean;
+  setSheetOpen: (val: boolean) => void;
   text: string;
   lineNumber: number;
 }) {
+  console.log("inside the explanation tooltip", lineNumber);
   return (
-    <TooltipProvider delayDuration={0}>
-      <Tooltip open={tooltipOpen}>
-        <TooltipTrigger
-          style={{ position: "absolute", top: `${5 * lineNumber}%` }}
-        >
-          {}
-        </TooltipTrigger>
-        <TooltipContent
-          className="border border-white"
-          onPointerDownOutside={() => setTooltipOpen(false)}
-
-          // {/* Date */}
-        >
-          <span className="text-white">
-            {/* 2 days ago */}
-            {text}
-          </span>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>Line Explanation</SheetTitle>
+          <SheetDescription>
+            Detailed Elaboration for Line Number {lineNumber}
+          </SheetDescription>
+          <hr />
+        </SheetHeader>
+        <div className="grid gap-4 py-4">{text}</div>
+      </SheetContent>
+    </Sheet>
   );
 }
 

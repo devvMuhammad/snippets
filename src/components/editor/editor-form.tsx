@@ -15,7 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronsUpDown, Code } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,7 +23,7 @@ import { languages } from "@/config/languages";
 import CodeSnippets from "./code-snippets";
 import { EditorPageData } from "@/types";
 
-// receives the initial data from the server
+//! receives the initial data from the server
 export default function EditorForm({
   initialData,
 }: {
@@ -34,21 +34,23 @@ export default function EditorForm({
     () => initialData?.codeSnippets || [],
     [initialData?.codeSnippets]
   );
+  const initialTitle = initialData?.title || "";
+  const initialLanguage = initialData?.language || "";
+  const initialDescription = initialData?.description || "";
+  const initialFramework = initialData?.framework || "";
+  // destrucuting variables from the initialData for readable code
+  // const {} = initialData;
   // for tracking saved and unsaved changes
-  const [configChangesMade, setConfigChangesMade] = React.useState(false);
+  const [configChangesMade, setConfigChangesMade] = useState(false);
   // for title and description
-  const [title, setTitle] = React.useState(initialData?.title || "");
-  const [description, setDescription] = React.useState(
-    initialData?.description || ""
-  );
+  const [title, setTitle] = useState(initialTitle);
+  const [description, setDescription] = useState(initialDescription);
   // for language and framework selection
-  const [value, setValue] = React.useState(initialData?.language || ""); // value refers to the selected language
-  const [frameworkValue, setFrameworkValue] = React.useState(
-    initialData?.framework || ""
-  ); // value refers to the selected framework
+  const [value, setValue] = useState(initialLanguage); // value refers to the selected language
+  const [frameworkValue, setFrameworkValue] = useState(initialFramework); // value refers to the selected framework
   // open states for the popovers
-  const [languageOpen, setLanguageOpen] = React.useState(false); // for the tooltip
-  const [frameworkOpen, setFrameworkOpen] = React.useState(false); // for the tooltip
+  const [languageOpen, setLanguageOpen] = useState(false); // for the tooltip
+  const [frameworkOpen, setFrameworkOpen] = useState(false); // for the tooltip
   // current array of frameworks based on the language selected
   const currentFrameworkArray = languages.find(
     (language) => language.value === value
@@ -65,26 +67,17 @@ export default function EditorForm({
         framework: frameworkValue,
       }) !==
       JSON.stringify({
-        title: initialData?.title,
-        description: initialData?.description,
-        language: initialData?.language,
-        framework: initialData?.framework,
+        title: initialTitle,
+        description: initialDescription,
+        language: initialLanguage,
+        framework: initialFramework,
       })
     ) {
       setConfigChangesMade(true);
     } else {
       setConfigChangesMade(false);
     }
-  }, [
-    title,
-    description,
-    value,
-    frameworkValue,
-    initialData?.title,
-    initialData?.description,
-    initialData?.language,
-    initialData?.framework,
-  ]);
+  }, [title, description, value, frameworkValue]);
 
   return (
     <>

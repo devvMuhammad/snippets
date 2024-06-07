@@ -11,10 +11,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "../ui/label";
-import { memo, useCallback, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import EmptySnippet from "./empty-snippet";
 import { CodeSnippetType, ExpType } from "@/types";
 import CreateButton from "./create-button";
+import { Button } from "../ui/button";
 // import exp from "constants";
 
 export const CodeSnippets = memo(function ({
@@ -66,6 +67,12 @@ export const CodeSnippets = memo(function ({
       },
     ]);
   };
+  useEffect(() => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "instant",
+    });
+  }, [codeSnippets.length]);
   console.log(codeSnippets);
   return (
     <>
@@ -86,10 +93,21 @@ export const CodeSnippets = memo(function ({
                 setFontSize={setFontSize}
               />
             </div>
-            <span className="text-xs text-balance">
-              First, write your code snippets. Then, you can add line-by-line
-              explanations
-            </span>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-balance">
+                First, write your code snippets. Then, you can add line-by-line
+                explanations
+              </span>
+              {codeChangesMade && (
+                <span className="text-sm">
+                  Unsaved Changes{" "}
+                  <Button size="sm" className="ml-2">
+                    Save
+                  </Button>
+                </span>
+              )}
+            </div>
+
             <div className="space-y-8">
               {initialCodeSnippets &&
                 codeSnippets &&
@@ -108,10 +126,7 @@ export const CodeSnippets = memo(function ({
                       );
                     }}
                     initialCode={snippet.code} //later
-                    // explanations={snippet.explanations} //later
                     initialExplanations={snippet.explanations} //later
-                    // codeSnippets={codeSnippets}
-                    // currentEditorRef={allEditorsRef.current[index]}
                     updateAllEditorsRef={updateAllEditorsRef}
                     setCodeChangesMade={setCodeChangesMade}
                   />
@@ -119,7 +134,6 @@ export const CodeSnippets = memo(function ({
             </div>
           </>
         )}
-        {codeChangesMade && <h1>Unsaved Changes</h1>}
       </div>
     </>
   );
