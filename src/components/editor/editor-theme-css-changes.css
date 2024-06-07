@@ -1,0 +1,30 @@
+.ql-snow .ql-stroke {
+  stroke: white !important;
+}
+.ql-snow .ql-picker {
+  color: white !important;
+}
+/*  */
+.ql-snow.ql-toolbar .ql-picker-label:hover,
+.ql-snow .ql-toolbar .ql-picker-label:hover {
+  color: white !important;
+}
+.ql-snow .ql-picker:hover {
+  color: black !important;
+}
+/*  */
+.ql-snow .ql-picker-options .ql-picker-item:hover {
+  color: grey !important;
+}
+.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+  color: black !important;
+}
+/* border of the main editor */
+.ql-toolbar.ql-snow {
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+.ql-container.ql-snow {
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
