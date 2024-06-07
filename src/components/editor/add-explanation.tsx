@@ -14,6 +14,9 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { useState } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import "./editor-theme-css-changes.css";
 
 export default function AddExplanationForm({
   lineNumber,
@@ -70,10 +73,17 @@ export default function AddExplanationForm({
             <Label htmlFor="explanation" className="inline">
               Explanation
             </Label>
-            <Textarea
+            {/* //! Rich Text Editor for writing an explanation */}
+            {/* <Textarea
               id="explanation"
               placeholder="explanation for the line goes here ..."
               onChange={(e) => setExplanation(e.target.value)}
+            /> */}
+            <ReactQuill
+              theme="snow"
+              className="bg-background text-white"
+              value={explanation}
+              onChange={setExplanation}
             />
           </div>
         </div>
