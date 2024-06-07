@@ -23,7 +23,7 @@
 # MILESTONES
 
 - how do you display a code snippet?
-- how do you make a sode snippet?
+- how do you make a sode snippet? (done)
 - notifications
 - views
 - smooth animations
@@ -31,8 +31,14 @@
 
 # CURRENT STATE (WHAT TO DO NEXT)
 
-- fix any small test cases in the editor page
-- add backend to it now
+- use page (done)
+- editor page (done)
+
+# TO DO NOW
+
+- fetch the snippets from the backend
+- creating a new snippet and then navigating to it
+- editing a snippet and then navigatiing to it
 
 # BACKEND FUNCTIONALITIES TO ADD
 
