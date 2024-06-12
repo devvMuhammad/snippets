@@ -10,12 +10,6 @@ import {
 import { Editor as MonacoEditor } from "@monaco-editor/react";
 import { githubDarkTheme } from "@/config/themes/github-dark";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -30,15 +24,7 @@ import { Icons } from "../icons";
 import { ExpType } from "@/types";
 import AddExplanationForm from "./add-explanation";
 import RemoveExplanation from "./remove-explanation";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "../ui/sheet";
+import ExplanationSidebar from "./explantion-sidebar";
 
 export const CodeEditor = memo(function ({
   index,
@@ -162,9 +148,6 @@ export const CodeEditor = memo(function ({
           )}
           {mode === "explain" && (
             <>
-              <Button onClick={() => setMode("edit")} size="sm">
-                Move Back
-              </Button>
               <AddExplanationForm
                 editorRef={editorRef}
                 lineNumber={lineNumber ?? 1}
@@ -177,6 +160,9 @@ export const CodeEditor = memo(function ({
                   lineNumber={lineNumber ?? 1}
                 />
               )}
+              <Button onClick={() => setMode("edit")} size="sm">
+                Move Back
+              </Button>
             </>
           )}
           <DeleteSingleSnippet removeSnippet={removeSnippet} />
@@ -248,34 +234,6 @@ export const CodeEditor = memo(function ({
     </div>
   );
 });
-
-function ExplanationSidebar({
-  sheetOpen,
-  setSheetOpen,
-  text,
-  lineNumber,
-}: {
-  sheetOpen: boolean;
-  setSheetOpen: (val: boolean) => void;
-  text: string;
-  lineNumber: number;
-}) {
-  console.log("inside the explanation tooltip", lineNumber);
-  return (
-    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Line Explanation</SheetTitle>
-          <SheetDescription>
-            Detailed Elaboration for Line Number {lineNumber}
-          </SheetDescription>
-          <hr />
-        </SheetHeader>
-        <div className="grid gap-4 py-4">{text}</div>
-      </SheetContent>
-    </Sheet>
-  );
-}
 
 function DeleteSingleSnippet({ removeSnippet }: { removeSnippet: () => void }) {
   const [open, setOpen] = useState(false);
