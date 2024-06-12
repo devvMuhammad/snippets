@@ -32,6 +32,7 @@ export default function AddExplanationForm({
   const [explanation, setExplanation] = useState("");
   const [inputLineNumber, setInputLineNumber] = useState<number>(1);
   const [dialogOpen, setDialogOpen] = useState(false);
+  console.log(explanation);
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
