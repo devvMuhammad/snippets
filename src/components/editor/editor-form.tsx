@@ -17,11 +17,12 @@ import {
 } from "@/components/ui/popover";
 import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Check, ChevronsUpDown, Code } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { languages } from "@/config/languages";
 import CodeSnippets from "./code-snippets";
 import { EditorPageData } from "@/types";
+import EditorPageTitle from "./editor-page-title";
 
 //! receives the initial data from the server
 export default function EditorForm({
@@ -81,8 +82,7 @@ export default function EditorForm({
 
   return (
     <>
-      {" "}
-      {configChangesMade && <h1>Unsaved Changes</h1>}
+      <EditorPageTitle configChangesMade={configChangesMade} />
       <div className="space-y-2">
         <Label htmlFor="title" className="inline text-lg">
           Title
