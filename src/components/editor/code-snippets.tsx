@@ -1,6 +1,5 @@
 "use client";
 import CodeEditor from "./code-editor";
-
 import {
   Select,
   SelectContent,
@@ -16,27 +15,22 @@ import EmptySnippet from "./empty-snippet";
 import { CodeSnippetType, ExpType } from "@/types";
 import CreateButton from "./create-button";
 import { Button } from "../ui/button";
-// import exp from "constants";
 
 export const CodeSnippets = memo(function ({
   language,
   framework,
   initialCodeSnippets,
-}: // setConfigChangesMade,
-{
+}: {
   language: string;
   framework: string;
   initialCodeSnippets?: CodeSnippetType[];
-  // setConfigChangesMade: (val: boolean) => void;
 }) {
-  // we make a shallow becuase if we pass this directly, the intialCodeSnippets is also changed because we change the initalEditorsRef mutably which will change the intialCodeSnippets array as well
   const initialCodeSnippetsCopy = [
     ...(initialCodeSnippets as CodeSnippetType[]),
   ];
   const allEditorsRef = useRef<CodeSnippetType[]>(
     initialCodeSnippetsCopy || []
   );
-  // functions for updating refs
   const updateAllEditorsRef = useCallback(
     (index: number, code: string, explanations: ExpType[]) => {
       console.log(allEditorsRef.current);
@@ -45,20 +39,16 @@ export const CodeSnippets = memo(function ({
     []
   );
 
-  //! when kaafi kaam hochuka hai, then issue warning before changing the language or framework
-  // array of snippets (just for initial data and keeping track of separate code blocks)
   const [codeSnippets, setCodeSnippets] = useState<CodeSnippetType[]>(
     initialCodeSnippets || [{ code: "tiz", explanations: [] }]
   );
-  // for unsaved changes in the code
   const [codeChangesMade, setCodeChangesMade] = useState(false);
-  // for theme and fontSize
   const [theme, setTheme] = useState("vs-dark");
   const [fontSize, setFontSize] = useState(17);
-  // function to add a snippet
+
+  const prevLengthRef = useRef(codeSnippets.length);
+
   const addSnippet = () => {
-    //! set this later
-    // if (!language || !framework) return;
     setCodeSnippets((prev) => [
       ...prev,
       {
@@ -67,13 +57,21 @@ export const CodeSnippets = memo(function ({
       },
     ]);
   };
+
   useEffect(() => {
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: "instant",
-    });
+    if (codeSnippets.length > prevLengthRef.current) {
+      if (window !== undefined) {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+    }
+    prevLengthRef.current = codeSnippets.length;
   }, [codeSnippets.length]);
+
   console.log(codeSnippets);
+
   return (
     <>
       <div className="space-y-3">
@@ -94,13 +92,13 @@ export const CodeSnippets = memo(function ({
               />
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-balance">
+              <span className="text-base text-gray-400 text-balance">
                 First, write your code snippets. Then, you can add line-by-line
                 explanations
               </span>
               {codeChangesMade && (
                 <span className="text-sm">
-                  Unsaved Changes{" "}
+                  Unsaved Code Changes{" "}
                   <Button size="sm" className="ml-2">
                     Save
                   </Button>
@@ -120,13 +118,12 @@ export const CodeSnippets = memo(function ({
                     fontSize={fontSize}
                     number={index + 1}
                     removeSnippet={() => {
-                      // replace this with db logic later, no state will be involved here
                       setCodeSnippets((prev) =>
                         prev.filter((_, i) => i !== index)
                       );
                     }}
-                    initialCode={snippet.code} //later
-                    initialExplanations={snippet.explanations} //later
+                    initialCode={snippet.code}
+                    initialExplanations={snippet.explanations}
                     updateAllEditorsRef={updateAllEditorsRef}
                     setCodeChangesMade={setCodeChangesMade}
                   />
